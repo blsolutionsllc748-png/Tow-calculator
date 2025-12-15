@@ -215,6 +215,41 @@
                 "<strong>Estimated towing cost: $" + totalFormatted + "</strong><br>" +
                 "Distance: " + distanceText + " (" + milesFormatted + " miles)<br>" +
                 "Final estimate may vary depending on route and vehicle condition.";
+              // Show CTA buttons after a successful estimate
+const cta = document.getElementById("cta");
+const smsBtn = document.getElementById("smsBtn");
+const emailBtn = document.getElementById("emailBtn");
+
+if (cta && smsBtn && emailBtn) {
+  cta.style.display = "flex";
+
+  // SMS (works on most phones; desktop may ignore)
+  smsBtn.href =
+    "sms:5083692955?&body=" +
+    encodeURIComponent(
+      "Hi B-L Auto Export, I'd like a tow quote. " +
+      "Pickup: " + origin + " | Drop-off: " + destination +
+      " | Distance: " + (distanceText + " (" + milesFormatted + " miles)") +
+      " | Estimate: $" + totalFormatted +
+      (isNonRunner ? " | Non-runner: Yes (+$50)" : "")
+    );
+
+  // Email
+  emailBtn.href =
+    "mailto:info@blautoexport.com?subject=" +
+    encodeURIComponent("Tow Request - B-L Auto Export") +
+    "&body=" +
+    encodeURIComponent(
+      "Hello,\n\nI want to request a tow.\n\n" +
+      "Pickup: " + origin + "\n" +
+      "Drop-off: " + destination + "\n" +
+      "Non-runner: " + (isNonRunner ? "Yes (+$50)" : "No") + "\n" +
+      "Distance: " + (distanceText + " (" + milesFormatted + " miles)") + "\n" +
+      "Estimated cost: $" + totalFormatted + "\n\n" +
+      "Thanks"
+    );
+}
+
             }
           );
         }, function (msg) {
