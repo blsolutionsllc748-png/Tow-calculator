@@ -2,51 +2,91 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>B-L Auto Export –Transport Estimator</title>
+  <title>B-L Auto Export – Tow & Transport Estimator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <style>
-    body { font-family: Arial, sans-serif; background:#f3f4f6; margin:0; padding:0; }
-    .container { max-width:720px; margin:40px auto; background:#fff; border-radius:12px; padding:24px; box-shadow:0 10px 25px rgba(0,0,0,0.08); }
-    h1 { text-align:center; margin:0; font-size:24px; color:#111827; }
-    p.subtitle { text-align:center; font-size:14px; color:#4b5563; margin:8px 0 18px; }
-    label { font-weight:bold; font-size:14px; display:block; margin-top:12px; margin-bottom:6px; color:#111827; }
+    :root{
+      /* Brand colors (tweak to match your website) */
+      --brand-bg: #0b0f14;          /* near-black */
+      --brand-card: #ffffff;        /* white */
+      --brand-text: #111827;        /* dark text */
+      --brand-muted: #6b7280;       /* gray */
+      --brand-accent: #c1121f;      /* red accent */
+      --brand-accent-2: #111827;    /* black */
+      --brand-success: #16a34a;     /* green */
+      --brand-blue: #2563eb;        /* blue */
+      --border: #e5e7eb;
+    }
+
+    body { font-family: Arial, sans-serif; background: #f3f4f6; margin:0; padding:0; }
+    .container { max-width: 820px; margin: 40px auto; background: var(--brand-card); border-radius: 14px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); border:1px solid var(--border); }
+
+    .header {
+      display:flex; align-items:center; gap:12px; justify-content:center; flex-wrap:wrap;
+      margin-bottom: 6px;
+    }
+    .logo {
+      height: 42px; width:auto; display:block;
+    }
+    h1 { text-align:center; margin:0; font-size: 24px; color: var(--brand-text); }
+    .subtitle { text-align:center; font-size: 14px; color: var(--brand-muted); margin: 8px 0 18px; }
+
+    label { font-weight:bold; font-size:14px; display:block; margin-top:12px; margin-bottom:6px; color: var(--brand-text); }
     input[type="text"], select {
-      width:100%; padding:10px 10px; border-radius:8px; border:1px solid #d1d5db;
+      width:100%; padding:10px 10px; border-radius:10px; border:1px solid var(--border);
       font-size:14px; box-sizing:border-box; background:#fff;
     }
+
     .row { display:flex; gap:12px; flex-wrap:wrap; }
-    .col { flex:1; min-width:220px; }
-    .checkbox-row { display:flex; align-items:center; margin-top:12px; font-size:14px; color:#111827; }
+    .col { flex:1; min-width:240px; }
+
+    .checkbox-row { display:flex; align-items:center; margin-top:12px; font-size:14px; color: var(--brand-text); }
     .checkbox-row input { margin-right:8px; transform:scale(1.05); }
+
     button {
-      width:100%; margin-top:18px; padding:12px 0; background:#111827; color:#fff;
-      font-size:16px; font-weight:bold; border:none; border-radius:10px; cursor:pointer;
+      width:100%; margin-top:18px; padding:12px 0;
+      background: var(--brand-accent-2); color:#fff;
+      font-size:16px; font-weight:bold; border:none; border-radius:12px; cursor:pointer;
     }
     button:hover { opacity:0.92; }
-    #result { margin-top:16px; font-size:15px; min-height:44px; color:#111827; }
-    .disclaimer { margin-top:16px; font-size:12px; color:#6b7280; line-height:1.45; }
+
+    #result { margin-top:16px; font-size:15px; min-height:44px; color: var(--brand-text); }
+    .meta { margin-top:10px; font-size:13px; color: var(--brand-muted); min-height:18px; }
+
+    .badge {
+      display:inline-block; padding:4px 10px; border-radius:999px;
+      font-size:12px; background: #fee2e2; color: #7f1d1d; border: 1px solid #fecaca;
+      margin-left:6px;
+    }
+
+    .disclaimer { margin-top:16px; font-size:12px; color: var(--brand-muted); line-height:1.45; }
+
     .cta { display:none; margin-top:14px; gap:10px; display:flex; flex-wrap:wrap; }
     .cta a {
       flex:1; min-width:160px; text-align:center; padding:11px 12px; color:#fff;
-      text-decoration:none; border-radius:10px; font-weight:bold;
+      text-decoration:none; border-radius:12px; font-weight:bold;
     }
-    .cta .call { background:#16a34a; }
-    .cta .sms { background:#111827; }
-    .cta .email { background:#2563eb; }
-    .pill {
-      display:inline-block; font-size:12px; padding:4px 10px; border-radius:999px;
-      background:#eef2ff; color:#3730a3; margin-left:6px;
-    }
+    .cta .call { background: var(--brand-success); }
+    .cta .sms { background: var(--brand-accent-2); }
+    .cta .email { background: var(--brand-blue); }
+
+    .muted { opacity:0.55; }
+    .hint { font-size:12px; color: var(--brand-muted); margin-top:6px; }
+    .hr { height:1px; background: var(--border); margin: 18px 0 6px; }
   </style>
 </head>
 
 <body>
   <div class="container">
-    <h1>Tow & Transport Cost Estimator</h1>
-    <p class="subtitle">
-      Estimates for local towing and auction-to-port/nationwide vehicle transport.
-      <span class="pill">Broker estimate</span>
-    </p>
+    <div class="header">
+      <!-- Put logo.png in the same GitHub repo as index.html -->
+      <img class="logo" src="logo.png" alt="B-L Auto Export" onerror="this.style.display='none';" />
+      <h1>Tow & Transport Cost Estimator <span class="badge">Broker estimate</span></h1>
+    </div>
+    <div class="subtitle">
+      Local towing + nationwide auction/port transport. Final pricing confirmed before dispatch.
+    </div>
 
     <div class="row">
       <div class="col">
@@ -55,27 +95,66 @@
           <option value="local">Local Tow (short distance)</option>
           <option value="transport">Auction / Port Transport (nationwide)</option>
         </select>
+        <div class="hint">Tip: Use “Transport” for auction → yard/port, long distance, Central Dispatch jobs.</div>
+      </div>
+
+      <div class="col">
+        <label for="vehicleType">Vehicle type</label>
+        <select id="vehicleType">
+          <option value="sedan">Sedan/Compact</option>
+          <option value="suv">SUV/Crossover</option>
+          <option value="pickup">Pickup Truck</option>
+          <option value="van">Van</option>
+          <option value="oversize">Oversize/Heavy (manual quote)</option>
+        </select>
+        <div class="hint">Vehicle type affects estimate (larger vehicles cost more).</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <label for="shippingType">Shipping type</label>
+        <select id="shippingType">
+          <option value="open">Open carrier</option>
+          <option value="enclosed">Enclosed carrier</option>
+        </select>
+        <div class="hint">Enclosed is priced higher than open.</div>
+      </div>
+
+      <div class="col">
+        <label>&nbsp;</label>
+        <div class="checkbox-row" id="portRow" style="margin-top:0;">
+          <input id="portExport" type="checkbox" />
+          <span>Port / Export handling (+$75)</span>
+        </div>
+        <div class="hint">Port/Export add-on applies to transport jobs.</div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <label for="vin">VIN (optional)</label>
+        <input id="vin" type="text" placeholder="17-character VIN" maxlength="17" />
+        <div id="vinInfo" class="meta"></div>
       </div>
 
       <div class="col">
         <label>&nbsp;</label>
         <div class="checkbox-row" style="margin-top:0;">
-          <input id="portExport" type="checkbox" />
-          <span>Port / Export handling (+$75)</span>
+          <input id="nonRunner" type="checkbox" />
+          <span>Vehicle is a non-runner</span>
         </div>
+        <div class="hint">Non-runner may require extra loading effort.</div>
       </div>
     </div>
 
+    <div class="hr"></div>
+
     <label for="pickup">Pickup address</label>
-    <input id="pickup" type="text" placeholder="e.g. 5 Mendon Rd, Attleboro, MA 02703" />
+    <input id="pickup" type="text" placeholder="e.g. Copart / IAAI address" />
 
     <label for="dropoff">Drop-off address</label>
-    <input id="dropoff" type="text" placeholder="e.g. Dundalk Marine Terminal, Baltimore, MD" />
-
-    <div class="checkbox-row">
-      <input id="nonRunner" type="checkbox" />
-      <span>Vehicle is a non-runner</span>
-    </div>
+    <input id="dropoff" type="text" placeholder="e.g. Shipping yard / Port (RoRo)" />
 
     <button id="calcBtn">Calculate Estimate</button>
 
@@ -88,19 +167,22 @@
     </div>
 
     <div class="disclaimer">
-      This is a non-binding estimate. Final price may vary based on carrier availability, vehicle condition, timing, access, wait time,
+      This is a non-binding estimate. Final price may vary based on carrier availability, vehicle condition, timing, access/wait time,
       and port requirements. We’ll confirm a final quote before dispatch.
     </div>
   </div>
 
   <script>
-    // ====== PRICING (Option C hybrid) ======
-    // Local Tow
-    const LOCAL_BASE = 85;
-    const LOCAL_PER_MILE = 4.50;
+    // =====================
+    // YOUR BUSINESS SETTINGS
+    // =====================
+
+    // Local Tow pricing
+    const LOCAL_FLAT_UP_TO_10MI = 125;     // flat rate for <= 10 miles (you can change this)
+    const LOCAL_PER_MILE_AFTER_10 = 4.50;  // per mile after 10
     const LOCAL_NONRUNNER = 50;
 
-    // Transport (auction/port/nationwide)
+    // Transport pricing (auction/port/nationwide)
     const TRANS_MINIMUM = 200;
     const TRANS_PER_MILE = 1.50;
     const TRANS_NONRUNNER = 125;
@@ -108,7 +190,24 @@
     // Add-ons
     const PORT_EXPORT_FEE = 75;
 
-    // ====== ROUTES API (modern distance calc) ======
+    // Vehicle multipliers (applies to BOTH local + transport)
+    const VEHICLE_MULTIPLIERS = {
+      sedan: 1.00,
+      suv: 1.15,
+      pickup: 1.25,
+      van: 1.20
+      // oversize handled separately
+    };
+
+    // Shipping type multipliers (applies mostly to transport, but we apply to estimate overall)
+    const SHIPPING_MULTIPLIERS = {
+      open: 1.00,
+      enclosed: 1.60
+    };
+
+    // =====================
+    // ROUTES API DISTANCE
+    // =====================
     const GOOGLE_API_KEY = "AIzaSyDw8Pr5skK_KWzofp7434NsKvnI1ENPJc8";
 
     async function getDrivingDistanceMeters(origin, destination) {
@@ -126,11 +225,7 @@
         })
       });
 
-      if (!res.ok) {
-        const txt = await res.text().catch(() => "");
-        throw new Error("Routes API request failed: " + res.status + " " + txt);
-      }
-
+      if (!res.ok) throw new Error("Routes API failed (" + res.status + ").");
       const data = await res.json();
       const meters = data?.routes?.[0]?.distanceMeters;
       if (!meters) throw new Error("No route distance returned.");
@@ -139,40 +234,145 @@
 
     function money(n) { return "$" + n.toFixed(2); }
 
+    // =====================
+    // VIN VALIDATION + DECODE
+    // =====================
+    function normalizeVin(vin) { return (vin || "").trim().toUpperCase(); }
+
+    // 17 chars; excludes I, O, Q
+    function isValidVinFormat(vin) {
+      return /^[A-HJ-NPR-Z0-9]{17}$/.test(vin);
+    }
+
+    async function decodeVinNHTSA(vin) {
+      const url = "https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVin/" + encodeURIComponent(vin) + "?format=json";
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("VIN decode failed");
+      const data = await res.json();
+
+      const map = {};
+      for (const item of (data.Results || [])) {
+        if (item.Variable && item.Value) map[item.Variable] = item.Value;
+      }
+
+      const year = (map["Model Year"] || "").trim();
+      const make = (map["Make"] || "").trim();
+      const model = (map["Model"] || "").trim();
+      const bodyClass = (map["Body Class"] || "").trim();
+      const vehicleType = (map["Vehicle Type"] || "").trim();
+
+      return {
+        year, make, model, bodyClass, vehicleType,
+        display: (year + " " + make + " " + model).trim()
+      };
+    }
+
+    // Auto-suggest vehicle type from VIN decode
+    function suggestVehicleTypeFromVin(decoded) {
+      const blob = ((decoded.bodyClass || "") + " " + (decoded.vehicleType || "")).toLowerCase();
+
+      if (blob.includes("pickup")) return "pickup";
+      if (blob.includes("van")) return "van";
+      if (blob.includes("sport utility") || blob.includes("suv") || blob.includes("multipurpose")) return "suv";
+
+      // Default safe choice
+      return "sedan";
+    }
+
+    function vehicleLabel(v) {
+      return ({
+        sedan: "Sedan/Compact",
+        suv: "SUV/Crossover",
+        pickup: "Pickup Truck",
+        van: "Van",
+        oversize: "Oversize/Heavy (manual quote)"
+      })[v] || v;
+    }
+
+    function shippingLabel(s) {
+      return (s === "enclosed") ? "Enclosed" : "Open";
+    }
+
     window.addEventListener("load", function () {
       const btn = document.getElementById("calcBtn");
+
       const serviceTypeEl = document.getElementById("serviceType");
+      const vehicleTypeEl = document.getElementById("vehicleType");
+      const shippingTypeEl = document.getElementById("shippingType");
+
+      const vinEl = document.getElementById("vin");
+      const vinInfoEl = document.getElementById("vinInfo");
+
       const pickupInput = document.getElementById("pickup");
       const dropoffInput = document.getElementById("dropoff");
+
       const nonRunnerEl = document.getElementById("nonRunner");
       const portExportEl = document.getElementById("portExport");
+      const portRow = document.getElementById("portRow");
 
       const resultDiv = document.getElementById("result");
       const cta = document.getElementById("cta");
       const smsBtn = document.getElementById("smsBtn");
       const emailBtn = document.getElementById("emailBtn");
 
-      // Optional: only show port/export add-on when "transport" selected
-      function syncPortVisibility() {
+      // Only apply port/export checkbox visually for transport
+      function syncPortRow() {
         const isTransport = serviceTypeEl.value === "transport";
-        portExportEl.closest(".checkbox-row").style.opacity = isTransport ? "1" : "0.55";
+        portRow.classList.toggle("muted", !isTransport);
       }
-      serviceTypeEl.addEventListener("change", syncPortVisibility);
-      syncPortVisibility();
+      serviceTypeEl.addEventListener("change", syncPortRow);
+      syncPortRow();
 
       btn.addEventListener("click", async function () {
         const origin = pickupInput.value.trim();
         const destination = dropoffInput.value.trim();
-        const serviceType = serviceTypeEl.value; // "local" | "transport"
+
+        const serviceType = serviceTypeEl.value;     // local | transport
+        const vehicleType = vehicleTypeEl.value;     // sedan | suv | pickup | van | oversize
+        const shippingType = shippingTypeEl.value;   // open | enclosed
+
         const isNonRunner = nonRunnerEl.checked;
         const isPortExport = portExportEl.checked;
 
         cta.style.display = "none";
+        vinInfoEl.textContent = "";
 
         if (!origin || !destination) {
           resultDiv.style.color = "red";
           resultDiv.textContent = "Please enter both pickup and drop-off addresses.";
           return;
+        }
+
+        if (vehicleType === "oversize") {
+          resultDiv.style.color = "red";
+          resultDiv.textContent = "Oversize/Heavy vehicles require a manual quote. Please call or text.";
+          cta.style.display = "flex";
+          return;
+        }
+
+        // VIN decode (optional) + auto-suggest vehicle type
+        const vin = normalizeVin(vinEl.value);
+        let vinDecoded = "";
+        let vinMeta = null;
+
+        if (vin) {
+          if (!isValidVinFormat(vin)) {
+            resultDiv.style.color = "red";
+            resultDiv.textContent = "VIN looks invalid (must be 17 chars; no I/O/Q). Please check and try again.";
+            return;
+          }
+          vinInfoEl.textContent = "Decoding VIN...";
+          try {
+            vinMeta = await decodeVinNHTSA(vin);
+            vinDecoded = vinMeta.display;
+            vinInfoEl.textContent = vinDecoded ? ("VIN decoded: " + vinDecoded) : "VIN decoded (details unavailable).";
+
+            // Auto-suggest vehicle type based on VIN decode
+            const suggested = suggestVehicleTypeFromVin(vinMeta);
+            vehicleTypeEl.value = suggested;
+          } catch (e) {
+            vinInfoEl.textContent = "VIN decode failed (still calculating estimate).";
+          }
         }
 
         resultDiv.style.color = "#111827";
@@ -182,58 +382,88 @@
           const meters = await getDrivingDistanceMeters(origin, destination);
           const miles = meters / 1609.34;
 
+          // multipliers
+          const vMult = VEHICLE_MULTIPLIERS[vehicleTypeEl.value] || 1.0;
+          const sMult = SHIPPING_MULTIPLIERS[shippingType] || 1.0;
+
           let total = 0;
           let breakdown = "";
 
           if (serviceType === "local") {
-            total = LOCAL_BASE + (miles * LOCAL_PER_MILE) + (isNonRunner ? LOCAL_NONRUNNER : 0);
+            // 10-mile flat rate
+            const baseLocal = (miles <= 10)
+              ? LOCAL_FLAT_UP_TO_10MI
+              : (LOCAL_FLAT_UP_TO_10MI + ((miles - 10) * LOCAL_PER_MILE_AFTER_10));
+
+            total = baseLocal + (isNonRunner ? LOCAL_NONRUNNER : 0);
+
+            // Apply vehicle multiplier; shipping type doesn't matter much for local, but we apply only vehicle mult
+            total = total * vMult;
+
             breakdown =
-              "Local Tow pricing: " + money(LOCAL_BASE) + " base + " +
-              money(LOCAL_PER_MILE) + "/mile" +
-              (isNonRunner ? " + " + money(LOCAL_NONRUNNER) + " non-runner" : "");
+              "Local Tow pricing: " +
+              (miles <= 10
+                ? (money(LOCAL_FLAT_UP_TO_10MI) + " flat (up to 10 miles)")
+                : (money(LOCAL_FLAT_UP_TO_10MI) + " flat + " + money(LOCAL_PER_MILE_AFTER_10) + "/mile after 10")) +
+              (isNonRunner ? (" + " + money(LOCAL_NONRUNNER) + " non-runner") : "") +
+              (vMult !== 1.0 ? (" • Vehicle multiplier: x" + vMult.toFixed(2)) : "");
           } else {
+            // Transport (open/enclosed matters more)
             const mileageCost = miles * TRANS_PER_MILE;
             total = Math.max(TRANS_MINIMUM, mileageCost) +
                     (isNonRunner ? TRANS_NONRUNNER : 0) +
                     (isPortExport ? PORT_EXPORT_FEE : 0);
 
+            // Apply both vehicle + shipping multipliers
+            total = total * vMult * sMult;
+
             breakdown =
-              "Transport pricing: max(" + money(TRANS_MINIMUM) + " minimum, " +
-              money(TRANS_PER_MILE) + "/mile) " +
-              (isNonRunner ? " + " + money(TRANS_NONRUNNER) + " non-runner" : "") +
-              (isPortExport ? " + " + money(PORT_EXPORT_FEE) + " port/export" : "");
+              "Transport pricing: max(" + money(TRANS_MINIMUM) + " minimum, " + money(TRANS_PER_MILE) + "/mile)" +
+              (isNonRunner ? (" + " + money(TRANS_NONRUNNER) + " non-runner") : "") +
+              (isPortExport ? (" + " + money(PORT_EXPORT_FEE) + " port/export") : "") +
+              (vMult !== 1.0 ? (" • Vehicle multiplier: x" + vMult.toFixed(2)) : "") +
+              (sMult !== 1.0 ? (" • " + shippingLabel(shippingType) + " multiplier: x" + sMult.toFixed(2)) : "");
           }
 
           const distanceLine = miles.toFixed(1) + " miles";
+          const serviceLabel = (serviceType === "local") ? "Local Tow" : "Auction/Port Transport";
+          const portText = (serviceType === "transport" && isPortExport) ? "Yes (+$75)" : "No";
+          const nonRunnerText = isNonRunner ? "Yes" : "No";
+          const vehicleText = vehicleLabel(vehicleTypeEl.value);
+          const shipText = shippingLabel(shippingType);
+          const estimateText = money(total);
 
           resultDiv.style.color = "#111827";
           resultDiv.innerHTML =
-            "<strong>Estimated cost: " + money(total) + "</strong><br>" +
+            "<strong>Estimated cost: " + estimateText + "</strong><br>" +
             "Distance: " + distanceLine + "<br>" +
-            "<span style='color:#4b5563;font-size:13px;'>" + breakdown + "</span>";
+            "Service: " + serviceLabel + "<br>" +
+            "Vehicle type: " + vehicleText + "<br>" +
+            "Shipping: " + shipText + "<br>" +
+            (vin ? ("VIN: " + vin + "<br>") : "") +
+            (vinDecoded ? ("VIN decoded: " + vinDecoded + "<br>") : "") +
+            "<span style='color:#6b7280;font-size:13px;'>" + breakdown + "</span>";
 
-          // Show buttons
           cta.style.display = "flex";
 
-          const serviceLabel = (serviceType === "local") ? "Local Tow" : "Auction/Port Transport";
-          const portText = isPortExport ? "Yes (+$75)" : "No";
-          const nonRunnerText = isNonRunner ? "Yes" : "No";
-
-          // SMS
+          // Fill SMS + Email
           smsBtn.href =
             "sms:5083692955?&body=" +
             encodeURIComponent(
               "Hi B-L Auto Export, I'd like a quote/booking.\n" +
               "Service: " + serviceLabel + "\n" +
+              "Vehicle type: " + vehicleText + "\n" +
+              "Shipping: " + shipText + "\n" +
+              (vin ? ("VIN: " + vin + "\n") : "") +
+              (vinDecoded ? ("VIN decoded: " + vinDecoded + "\n") : "") +
               "Pickup: " + origin + "\n" +
               "Drop-off: " + destination + "\n" +
               "Distance: " + distanceLine + "\n" +
               "Non-runner: " + nonRunnerText + "\n" +
               "Port/Export: " + portText + "\n" +
-              "Estimated cost: " + money(total)
+              "Estimated cost: " + estimateText
             );
 
-          // Email
           emailBtn.href =
             "mailto:info@blautoexport.com?subject=" +
             encodeURIComponent("Tow/Transport Request - B-L Auto Export") +
@@ -241,25 +471,29 @@
             encodeURIComponent(
               "Hello,\n\nI want to request a quote/booking.\n\n" +
               "Service: " + serviceLabel + "\n" +
+              "Vehicle type: " + vehicleText + "\n" +
+              "Shipping: " + shipText + "\n" +
+              (vin ? ("VIN: " + vin + "\n") : "") +
+              (vinDecoded ? ("VIN decoded: " + vinDecoded + "\n") : "") +
               "Pickup: " + origin + "\n" +
               "Drop-off: " + destination + "\n" +
               "Distance: " + distanceLine + "\n" +
               "Non-runner: " + nonRunnerText + "\n" +
               "Port/Export: " + portText + "\n" +
-              "Estimated cost: " + money(total) + "\n\n" +
+              "Estimated cost: " + estimateText + "\n\n" +
               "Thanks"
             );
 
         } catch (err) {
           resultDiv.style.color = "red";
           resultDiv.textContent =
-            "Unable to calculate distance. Please verify the addresses or try again. (" + err.message + ")";
+            "Unable to calculate distance. Please verify addresses and try again. (" + err.message + ")";
         }
       });
     });
   </script>
 
-  <!-- Maps JS is optional here (we're using Routes API fetch), but kept for future autocomplete upgrades -->
+  <!-- Optional; kept for future Places autocomplete -->
   <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw8Pr5skK_KWzofp7434NsKvnI1ENPJc8&libraries=places"></script>
 </body>
 </html>
