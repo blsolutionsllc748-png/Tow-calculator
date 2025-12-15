@@ -2,43 +2,79 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>B-L Auto Export – Towing Cost Estimator</title>
+  <title>B-L Auto Export – Tow & Transport Estimator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <style>
     body { font-family: Arial, sans-serif; background:#f3f4f6; margin:0; padding:0; }
-    .container { max-width:700px; margin:40px auto; background:#fff; border-radius:10px; padding:24px; box-shadow:0 10px 25px rgba(0,0,0,0.08); }
-    h1 { text-align:center; margin-top:0; font-size:24px; color:#111827; }
-    p.subtitle { text-align:center; font-size:14px; color:#4b5563; margin-top:4px; margin-bottom:20px; }
-    label { font-weight:bold; font-size:14px; display:block; margin-top:12px; margin-bottom:4px; }
-    input[type="text"] { width:100%; padding:8px 10px; border-radius:6px; border:1px solid #d1d5db; font-size:14px; box-sizing:border-box; }
+    .container { max-width:720px; margin:40px auto; background:#fff; border-radius:12px; padding:24px; box-shadow:0 10px 25px rgba(0,0,0,0.08); }
+    h1 { text-align:center; margin:0; font-size:24px; color:#111827; }
+    p.subtitle { text-align:center; font-size:14px; color:#4b5563; margin:8px 0 18px; }
+    label { font-weight:bold; font-size:14px; display:block; margin-top:12px; margin-bottom:6px; color:#111827; }
+    input[type="text"], select {
+      width:100%; padding:10px 10px; border-radius:8px; border:1px solid #d1d5db;
+      font-size:14px; box-sizing:border-box; background:#fff;
+    }
+    .row { display:flex; gap:12px; flex-wrap:wrap; }
+    .col { flex:1; min-width:220px; }
     .checkbox-row { display:flex; align-items:center; margin-top:12px; font-size:14px; color:#111827; }
-    .checkbox-row input { margin-right:8px; }
-    button { width:100%; margin-top:18px; padding:10px 0; background:#111827; color:#fff; font-size:16px; font-weight:bold; border:none; border-radius:6px; cursor:pointer; }
-    button:hover { opacity:0.9; }
-    #result { margin-top:16px; font-size:15px; min-height:40px; color:#111827; }
-    .disclaimer { margin-top:18px; font-size:12px; color:#6b7280; line-height:1.4; }
+    .checkbox-row input { margin-right:8px; transform:scale(1.05); }
+    button {
+      width:100%; margin-top:18px; padding:12px 0; background:#111827; color:#fff;
+      font-size:16px; font-weight:bold; border:none; border-radius:10px; cursor:pointer;
+    }
+    button:hover { opacity:0.92; }
+    #result { margin-top:16px; font-size:15px; min-height:44px; color:#111827; }
+    .disclaimer { margin-top:16px; font-size:12px; color:#6b7280; line-height:1.45; }
     .cta { display:none; margin-top:14px; gap:10px; display:flex; flex-wrap:wrap; }
-    .cta a { flex:1; min-width:160px; text-align:center; padding:10px 12px; color:#fff; text-decoration:none; border-radius:8px; font-weight:bold; }
+    .cta a {
+      flex:1; min-width:160px; text-align:center; padding:11px 12px; color:#fff;
+      text-decoration:none; border-radius:10px; font-weight:bold;
+    }
     .cta .call { background:#16a34a; }
     .cta .sms { background:#111827; }
     .cta .email { background:#2563eb; }
+    .pill {
+      display:inline-block; font-size:12px; padding:4px 10px; border-radius:999px;
+      background:#eef2ff; color:#3730a3; margin-left:6px;
+    }
   </style>
 </head>
 
 <body>
   <div class="container">
-    <h1>Towing Cost Estimator</h1>
-    <p class="subtitle">Enter pickup and drop-off locations to get an instant estimate from B-L Auto Export LLC.</p>
+    <h1>Tow & Transport Cost Estimator</h1>
+    <p class="subtitle">
+      Estimates for local towing and auction-to-port/nationwide vehicle transport.
+      <span class="pill">Broker estimate</span>
+    </p>
+
+    <div class="row">
+      <div class="col">
+        <label for="serviceType">Service type</label>
+        <select id="serviceType">
+          <option value="local">Local Tow (short distance)</option>
+          <option value="transport">Auction / Port Transport (nationwide)</option>
+        </select>
+      </div>
+
+      <div class="col">
+        <label>&nbsp;</label>
+        <div class="checkbox-row" style="margin-top:0;">
+          <input id="portExport" type="checkbox" />
+          <span>Port / Export handling (+$75)</span>
+        </div>
+      </div>
+    </div>
 
     <label for="pickup">Pickup address</label>
     <input id="pickup" type="text" placeholder="e.g. 5 Mendon Rd, Attleboro, MA 02703" />
 
     <label for="dropoff">Drop-off address</label>
-    <input id="dropoff" type="text" placeholder="e.g. 123 Main St, Providence, RI 02903" />
+    <input id="dropoff" type="text" placeholder="e.g. Dundalk Marine Terminal, Baltimore, MD" />
 
     <div class="checkbox-row">
       <input id="nonRunner" type="checkbox" />
-      <span>Vehicle is a non-runner (+$50)</span>
+      <span>Vehicle is a non-runner</span>
     </div>
 
     <button id="calcBtn">Calculate Estimate</button>
@@ -52,43 +88,85 @@
     </div>
 
     <div class="disclaimer">
-      This estimate is based on distance only. Final pricing may vary depending on vehicle condition, access, timing, or special circumstances.
-      Please contact B-L Auto Export LLC to confirm your final quote.
+      This is a non-binding estimate. Final price may vary based on carrier availability, vehicle condition, timing, access, wait time,
+      and port requirements. We’ll confirm a final quote before dispatch.
     </div>
   </div>
 
   <script>
-    const BASE_FEE = 75;
-    const PER_MILE = 3;
-    const NON_RUNNER_FEE = 50;
+    // ====== PRICING (Option C hybrid) ======
+    // Local Tow
+    const LOCAL_BASE = 85;
+    const LOCAL_PER_MILE = 4.50;
+    const LOCAL_NONRUNNER = 50;
 
-    let distanceService = null;
+    // Transport (auction/port/nationwide)
+    const TRANS_MINIMUM = 200;
+    const TRANS_PER_MILE = 1.50;
+    const TRANS_NONRUNNER = 125;
 
-    function ensureDistanceServiceReady(callback, errorCallback) {
-      if (distanceService) return callback();
-      if (window.google && google.maps && google.maps.DistanceMatrixService) {
-        distanceService = new google.maps.DistanceMatrixService();
-        return callback();
+    // Add-ons
+    const PORT_EXPORT_FEE = 75;
+
+    // ====== ROUTES API (modern distance calc) ======
+    const GOOGLE_API_KEY = "AIzaSyDw8Pr5skK_KWzofp7434NsKvnI1ENPJc8";
+
+    async function getDrivingDistanceMeters(origin, destination) {
+      const res = await fetch("https://routes.googleapis.com/directions/v2:computeRoutes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-Goog-Api-Key": GOOGLE_API_KEY,
+          "X-Goog-FieldMask": "routes.distanceMeters"
+        },
+        body: JSON.stringify({
+          origin: { address: origin },
+          destination: { address: destination },
+          travelMode: "DRIVE"
+        })
+      });
+
+      if (!res.ok) {
+        const txt = await res.text().catch(() => "");
+        throw new Error("Routes API request failed: " + res.status + " " + txt);
       }
-      return errorCallback("Map service is not ready yet. Please wait a moment and try again.");
+
+      const data = await res.json();
+      const meters = data?.routes?.[0]?.distanceMeters;
+      if (!meters) throw new Error("No route distance returned.");
+      return meters;
     }
+
+    function money(n) { return "$" + n.toFixed(2); }
 
     window.addEventListener("load", function () {
       const btn = document.getElementById("calcBtn");
+      const serviceTypeEl = document.getElementById("serviceType");
       const pickupInput = document.getElementById("pickup");
       const dropoffInput = document.getElementById("dropoff");
-      const nonRunnerCheckbox = document.getElementById("nonRunner");
+      const nonRunnerEl = document.getElementById("nonRunner");
+      const portExportEl = document.getElementById("portExport");
+
       const resultDiv = document.getElementById("result");
       const cta = document.getElementById("cta");
       const smsBtn = document.getElementById("smsBtn");
       const emailBtn = document.getElementById("emailBtn");
 
-      btn.addEventListener("click", function () {
+      // Optional: only show port/export add-on when "transport" selected
+      function syncPortVisibility() {
+        const isTransport = serviceTypeEl.value === "transport";
+        portExportEl.closest(".checkbox-row").style.opacity = isTransport ? "1" : "0.55";
+      }
+      serviceTypeEl.addEventListener("change", syncPortVisibility);
+      syncPortVisibility();
+
+      btn.addEventListener("click", async function () {
         const origin = pickupInput.value.trim();
         const destination = dropoffInput.value.trim();
-        const isNonRunner = nonRunnerCheckbox.checked;
+        const serviceType = serviceTypeEl.value; // "local" | "transport"
+        const isNonRunner = nonRunnerEl.checked;
+        const isPortExport = portExportEl.checked;
 
-        // hide buttons until we get a successful result
         cta.style.display = "none";
 
         if (!origin || !destination) {
@@ -100,82 +178,88 @@
         resultDiv.style.color = "#111827";
         resultDiv.textContent = "Calculating distance and estimate...";
 
-        ensureDistanceServiceReady(function () {
-          distanceService.getDistanceMatrix(
-            {
-              origins: [origin],
-              destinations: [destination],
-              travelMode: google.maps.TravelMode.DRIVING,
-              unitSystem: google.maps.UnitSystem.IMPERIAL
-            },
-            function (response, status) {
-              if (status !== "OK") {
-                resultDiv.style.color = "red";
-                resultDiv.textContent = "Unable to calculate distance (Google error). Please try again.";
-                return;
-              }
+        try {
+          const meters = await getDrivingDistanceMeters(origin, destination);
+          const miles = meters / 1609.34;
 
-              const element = response.rows[0].elements[0];
-              if (!element || element.status !== "OK") {
-                resultDiv.style.color = "red";
-                resultDiv.textContent = "Route not found. Try different locations.";
-                return;
-              }
+          let total = 0;
+          let breakdown = "";
 
-              const distanceMeters = element.distance.value;
-              const distanceMiles = distanceMeters / 1609.34;
-              const distanceText = element.distance.text;
+          if (serviceType === "local") {
+            total = LOCAL_BASE + (miles * LOCAL_PER_MILE) + (isNonRunner ? LOCAL_NONRUNNER : 0);
+            breakdown =
+              "Local Tow pricing: " + money(LOCAL_BASE) + " base + " +
+              money(LOCAL_PER_MILE) + "/mile" +
+              (isNonRunner ? " + " + money(LOCAL_NONRUNNER) + " non-runner" : "");
+          } else {
+            const mileageCost = miles * TRANS_PER_MILE;
+            total = Math.max(TRANS_MINIMUM, mileageCost) +
+                    (isNonRunner ? TRANS_NONRUNNER : 0) +
+                    (isPortExport ? PORT_EXPORT_FEE : 0);
 
-              let total = BASE_FEE + (distanceMiles * PER_MILE);
-              if (isNonRunner) total += NON_RUNNER_FEE;
+            breakdown =
+              "Transport pricing: max(" + money(TRANS_MINIMUM) + " minimum, " +
+              money(TRANS_PER_MILE) + "/mile) " +
+              (isNonRunner ? " + " + money(TRANS_NONRUNNER) + " non-runner" : "") +
+              (isPortExport ? " + " + money(PORT_EXPORT_FEE) + " port/export" : "");
+          }
 
-              const totalFormatted = total.toFixed(2);
-              const milesFormatted = distanceMiles.toFixed(1);
+          const distanceLine = miles.toFixed(1) + " miles";
 
-              resultDiv.style.color = "#111827";
-              resultDiv.innerHTML =
-                "<strong>Estimated towing cost: $" + totalFormatted + "</strong><br>" +
-                "Distance: " + distanceText + " (" + milesFormatted + " miles)<br>" +
-                "Final estimate may vary depending on route and vehicle condition.";
+          resultDiv.style.color = "#111827";
+          resultDiv.innerHTML =
+            "<strong>Estimated cost: " + money(total) + "</strong><br>" +
+            "Distance: " + distanceLine + "<br>" +
+            "<span style='color:#4b5563;font-size:13px;'>" + breakdown + "</span>";
 
-              // Show buttons
-              cta.style.display = "flex";
+          // Show buttons
+          cta.style.display = "flex";
 
-              // Update SMS with details
-              smsBtn.href =
-                "sms:5083692955?&body=" +
-                encodeURIComponent(
-                  "Hi B-L Auto Export, I'd like a tow quote. " +
-                  "Pickup: " + origin + " | Drop-off: " + destination +
-                  " | Distance: " + (distanceText + " (" + milesFormatted + " miles)") +
-                  " | Estimate: $" + totalFormatted +
-                  (isNonRunner ? " | Non-runner: Yes (+$50)" : "")
-                );
+          const serviceLabel = (serviceType === "local") ? "Local Tow" : "Auction/Port Transport";
+          const portText = isPortExport ? "Yes (+$75)" : "No";
+          const nonRunnerText = isNonRunner ? "Yes" : "No";
 
-              // Update Email with details
-              emailBtn.href =
-                "mailto:info@blautoexport.com?subject=" +
-                encodeURIComponent("Tow Request - B-L Auto Export") +
-                "&body=" +
-                encodeURIComponent(
-                  "Hello,\n\nI want to request a tow.\n\n" +
-                  "Pickup: " + origin + "\n" +
-                  "Drop-off: " + destination + "\n" +
-                  "Non-runner: " + (isNonRunner ? "Yes (+$50)" : "No") + "\n" +
-                  "Distance: " + (distanceText + " (" + milesFormatted + " miles)") + "\n" +
-                  "Estimated cost: $" + totalFormatted + "\n\n" +
-                  "Thanks"
-                );
-            }
-          );
-        }, function (msg) {
+          // SMS
+          smsBtn.href =
+            "sms:5083692955?&body=" +
+            encodeURIComponent(
+              "Hi B-L Auto Export, I'd like a quote/booking.\n" +
+              "Service: " + serviceLabel + "\n" +
+              "Pickup: " + origin + "\n" +
+              "Drop-off: " + destination + "\n" +
+              "Distance: " + distanceLine + "\n" +
+              "Non-runner: " + nonRunnerText + "\n" +
+              "Port/Export: " + portText + "\n" +
+              "Estimated cost: " + money(total)
+            );
+
+          // Email
+          emailBtn.href =
+            "mailto:info@blautoexport.com?subject=" +
+            encodeURIComponent("Tow/Transport Request - B-L Auto Export") +
+            "&body=" +
+            encodeURIComponent(
+              "Hello,\n\nI want to request a quote/booking.\n\n" +
+              "Service: " + serviceLabel + "\n" +
+              "Pickup: " + origin + "\n" +
+              "Drop-off: " + destination + "\n" +
+              "Distance: " + distanceLine + "\n" +
+              "Non-runner: " + nonRunnerText + "\n" +
+              "Port/Export: " + portText + "\n" +
+              "Estimated cost: " + money(total) + "\n\n" +
+              "Thanks"
+            );
+
+        } catch (err) {
           resultDiv.style.color = "red";
-          resultDiv.textContent = msg;
-        });
+          resultDiv.textContent =
+            "Unable to calculate distance. Please verify the addresses or try again. (" + err.message + ")";
+        }
       });
     });
   </script>
 
+  <!-- Maps JS is optional here (we're using Routes API fetch), but kept for future autocomplete upgrades -->
   <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw8Pr5skK_KWzofp7434NsKvnI1ENPJc8&libraries=places"></script>
 </body>
 </html>
