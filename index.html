@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>B-L Auto Export –Transport Estimator</title>
+  <title>Transport Cost Calculator</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
@@ -26,9 +26,7 @@
       display:flex; align-items:center; gap:12px; justify-content:center; flex-wrap:wrap;
       margin-bottom: 6px;
     }
-    .logo {
-      height: 42px; width:auto; display:block;
-    }
+    .logo { height: 42px; width:auto; display:block; }
     h1 { text-align:center; margin:0; font-size: 24px; color: var(--brand-text); }
     .subtitle { text-align:center; font-size: 14px; color: var(--brand-muted); margin: 8px 0 18px; }
 
@@ -82,7 +80,7 @@
     <div class="header">
       <!-- Put logo.png in the same GitHub repo as index.html -->
       <img class="logo" src="logo.png" alt="B-L Auto Export" onerror="this.style.display='none';" />
-      <h1>Tow & Transport Cost Estimator <span class="badge">Broker estimate</span></h1>
+      <h1>Transport Cost Calculator <span class="badge">Broker estimate</span></h1>
     </div>
     <div class="subtitle">
       Local towing + nationwide auction/port transport. Final pricing confirmed before dispatch.
@@ -93,7 +91,7 @@
         <label for="serviceType">Service type</label>
         <select id="serviceType">
           <option value="local">Local Tow (short distance)</option>
-          <option value="transport">Auction / Port Transport (nationwide)</option>
+          <option value="transport" selected>Auction / Port Transport (nationwide)</option>
         </select>
         <div class="hint">Tip: Use “Transport” for auction → yard/port, long distance, Central Dispatch jobs.</div>
       </div>
@@ -115,7 +113,7 @@
       <div class="col">
         <label for="shippingType">Shipping type</label>
         <select id="shippingType">
-          <option value="open">Open carrier</option>
+          <option value="open" selected>Open carrier</option>
           <option value="enclosed">Enclosed carrier</option>
         </select>
         <div class="hint">Enclosed is priced higher than open.</div>
@@ -178,7 +176,7 @@
     // =====================
 
     // Local Tow pricing
-    const LOCAL_FLAT_UP_TO_10MI = 125;     // flat rate for <= 10 miles (you can change this)
+    const LOCAL_FLAT_UP_TO_10MI = 125;     // flat rate for <= 10 miles
     const LOCAL_PER_MILE_AFTER_10 = 4.50;  // per mile after 10
     const LOCAL_NONRUNNER = 50;
 
@@ -186,6 +184,9 @@
     const TRANS_MINIMUM = 200;
     const TRANS_PER_MILE = 1.50;
     const TRANS_NONRUNNER = 125;
+
+    // Broker/dispatch fee (transport only; added AFTER multipliers)
+    const TRANS_BROKER_FEE = 70;
 
     // Add-ons
     const PORT_EXPORT_FEE = 75;
@@ -199,16 +200,53 @@
       // oversize handled separately
     };
 
-    // Shipping type multipliers (applies mostly to transport, but we apply to estimate overall)
+    // Shipping type multipliers
     const SHIPPING_MULTIPLIERS = {
       open: 1.00,
       enclosed: 1.60
     };
 
     // =====================
+    // PRICE PRESENTATION
+    // =====================
+    const ROUNDING_MODE = "nearest"; // "nearest" | "up"
+    const ROUND_TO = 25;            // $25 increments (try 50 if you want)
+
+    function roundPrice(amount) {
+      if (!isFinite(amount)) return amount;
+      if (ROUNDING_MODE === "up") return Math.ceil(amount / ROUND_TO) * ROUND_TO;
+      return Math.round(amount / ROUND_TO) * ROUND_TO;
+    }
+
+    // =====================
+    // LANE / MARKET SURCHARGES
+    // =====================
+    const LANE_SURCHARGES = [
+      { name: "Northeast congestion", match: /\b(NY|NJ|PA|MA|CT|MD|RI|NH|VT|ME)\b/i, fee: 50 },
+      { name: "Port lane premium", match: /(port|seaport|terminal|roro|ro-ro)/i, fee: 75 }
+    ];
+
+    function calculateLaneSurcharge(origin, destination) {
+      let surcharge = 0;
+      const o = origin || "";
+      const d = destination || "";
+      for (const lane of LANE_SURCHARGES) {
+        if (lane.match.test(o) || lane.match.test(d)) surcharge += lane.fee;
+      }
+      return surcharge;
+    }
+
+    // =====================
+    // ADMIN / DEBUG MODE
+    // =====================
+    // Enable by visiting: ?admin=1 (customers won't see it unless they know this)
+    const IS_ADMIN = new URLSearchParams(window.location.search).get("admin") === "1";
+
+    // =====================
     // ROUTES API DISTANCE
     // =====================
-    const GOOGLE_API_KEY = "AIzaSyDw8Pr5skK_KWzofp7434NsKvnI1ENPJc8";
+    // IMPORTANT: Put your restricted Routes API key here (DO NOT leave a public unrestricted key in GitHub)
+    const GOOGLE_API_KEY = "YOUR_GOOGLE_ROUTES_API_KEY";
 
     async function getDrivingDistanceMeters(origin, destination) {
       const res = await fetch("https://routes.googleapis.com/directions/v2:computeRoutes", {
@@ -232,17 +270,13 @@
       return meters;
     }
 
-    function money(n) { return "$" + n.toFixed(2); }
+    function money(n) { return "$" + Number(n).toFixed(2); }
 
     // =====================
     // VIN VALIDATION + DECODE
     // =====================
     function normalizeVin(vin) { return (vin || "").trim().toUpperCase(); }
-
-    // 17 chars; excludes I, O, Q
-    function isValidVinFormat(vin) {
-      return /^[A-HJ-NPR-Z0-9]{17}$/.test(vin);
-    }
+    function isValidVinFormat(vin) { return /^[A-HJ-NPR-Z0-9]{17}$/.test(vin); }
 
     async function decodeVinNHTSA(vin) {
       const url = "https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVin/" + encodeURIComponent(vin) + "?format=json";
@@ -261,21 +295,14 @@
       const bodyClass = (map["Body Class"] || "").trim();
       const vehicleType = (map["Vehicle Type"] || "").trim();
 
-      return {
-        year, make, model, bodyClass, vehicleType,
-        display: (year + " " + make + " " + model).trim()
-      };
+      return { year, make, model, bodyClass, vehicleType, display: (year + " " + make + " " + model).trim() };
     }
 
-    // Auto-suggest vehicle type from VIN decode
     function suggestVehicleTypeFromVin(decoded) {
       const blob = ((decoded.bodyClass || "") + " " + (decoded.vehicleType || "")).toLowerCase();
-
       if (blob.includes("pickup")) return "pickup";
       if (blob.includes("van")) return "van";
       if (blob.includes("sport utility") || blob.includes("suv") || blob.includes("multipurpose")) return "suv";
-
-      // Default safe choice
       return "sedan";
     }
 
@@ -289,9 +316,7 @@
       })[v] || v;
     }
 
-    function shippingLabel(s) {
-      return (s === "enclosed") ? "Enclosed" : "Open";
-    }
+    function shippingLabel(s) { return (s === "enclosed") ? "Enclosed" : "Open"; }
 
     window.addEventListener("load", function () {
       const btn = document.getElementById("calcBtn");
@@ -315,10 +340,11 @@
       const smsBtn = document.getElementById("smsBtn");
       const emailBtn = document.getElementById("emailBtn");
 
-      // Only apply port/export checkbox visually for transport
       function syncPortRow() {
         const isTransport = serviceTypeEl.value === "transport";
         portRow.classList.toggle("muted", !isTransport);
+        portExportEl.disabled = !isTransport;
+        if (!isTransport) portExportEl.checked = false;
       }
       serviceTypeEl.addEventListener("change", syncPortRow);
       syncPortRow();
@@ -328,11 +354,10 @@
         const destination = dropoffInput.value.trim();
 
         const serviceType = serviceTypeEl.value;     // local | transport
-        const vehicleType = vehicleTypeEl.value;     // sedan | suv | pickup | van | oversize
         const shippingType = shippingTypeEl.value;   // open | enclosed
 
         const isNonRunner = nonRunnerEl.checked;
-        const isPortExport = portExportEl.checked;
+        const isPortExport = portExportEl.checked && (serviceType === "transport");
 
         cta.style.display = "none";
         vinInfoEl.textContent = "";
@@ -343,7 +368,7 @@
           return;
         }
 
-        if (vehicleType === "oversize") {
+        if (vehicleTypeEl.value === "oversize") {
           resultDiv.style.color = "red";
           resultDiv.textContent = "Oversize/Heavy vehicles require a manual quote. Please call or text.";
           cta.style.display = "flex";
@@ -366,10 +391,7 @@
             vinMeta = await decodeVinNHTSA(vin);
             vinDecoded = vinMeta.display;
             vinInfoEl.textContent = vinDecoded ? ("VIN decoded: " + vinDecoded) : "VIN decoded (details unavailable).";
-
-            // Auto-suggest vehicle type based on VIN decode
-            const suggested = suggestVehicleTypeFromVin(vinMeta);
-            vehicleTypeEl.value = suggested;
+            vehicleTypeEl.value = suggestVehicleTypeFromVin(vinMeta);
           } catch (e) {
             vinInfoEl.textContent = "VIN decode failed (still calculating estimate).";
           }
@@ -382,48 +404,51 @@
           const meters = await getDrivingDistanceMeters(origin, destination);
           const miles = meters / 1609.34;
 
-          // multipliers
           const vMult = VEHICLE_MULTIPLIERS[vehicleTypeEl.value] || 1.0;
           const sMult = SHIPPING_MULTIPLIERS[shippingType] || 1.0;
 
           let total = 0;
-          let breakdown = "";
+
+          // For admin-only debug
+          let adminDebug = {
+            vMult, sMult,
+            brokerFee: 0,
+            laneSurcharge: 0,
+            roundedFrom: 0
+          };
 
           if (serviceType === "local") {
-            // 10-mile flat rate
             const baseLocal = (miles <= 10)
               ? LOCAL_FLAT_UP_TO_10MI
               : (LOCAL_FLAT_UP_TO_10MI + ((miles - 10) * LOCAL_PER_MILE_AFTER_10));
 
             total = baseLocal + (isNonRunner ? LOCAL_NONRUNNER : 0);
-
-            // Apply vehicle multiplier; shipping type doesn't matter much for local, but we apply only vehicle mult
-            total = total * vMult;
-
-            breakdown =
-              "Local Tow pricing: " +
-              (miles <= 10
-                ? (money(LOCAL_FLAT_UP_TO_10MI) + " flat (up to 10 miles)")
-                : (money(LOCAL_FLAT_UP_TO_10MI) + " flat + " + money(LOCAL_PER_MILE_AFTER_10) + "/mile after 10")) +
-              (isNonRunner ? (" + " + money(LOCAL_NONRUNNER) + " non-runner") : "") +
-              (vMult !== 1.0 ? (" • Vehicle multiplier: x" + vMult.toFixed(2)) : "");
+            total = total * vMult; // local: vehicle multiplier only
           } else {
-            // Transport (open/enclosed matters more)
             const mileageCost = miles * TRANS_PER_MILE;
-            total = Math.max(TRANS_MINIMUM, mileageCost) +
-                    (isNonRunner ? TRANS_NONRUNNER : 0) +
-                    (isPortExport ? PORT_EXPORT_FEE : 0);
 
-            // Apply both vehicle + shipping multipliers
-            total = total * vMult * sMult;
+            const baseTransport =
+              Math.max(TRANS_MINIMUM, mileageCost) +
+              (isNonRunner ? TRANS_NONRUNNER : 0) +
+              (isPortExport ? PORT_EXPORT_FEE : 0);
 
-            breakdown =
-              "Transport pricing: max(" + money(TRANS_MINIMUM) + " minimum, " + money(TRANS_PER_MILE) + "/mile)" +
-              (isNonRunner ? (" + " + money(TRANS_NONRUNNER) + " non-runner") : "") +
-              (isPortExport ? (" + " + money(PORT_EXPORT_FEE) + " port/export") : "") +
-              (vMult !== 1.0 ? (" • Vehicle multiplier: x" + vMult.toFixed(2)) : "") +
-              (sMult !== 1.0 ? (" • " + shippingLabel(shippingType) + " multiplier: x" + sMult.toFixed(2)) : "");
+            // multipliers first
+            total = baseTransport * vMult * sMult;
+
+            // broker fee after multipliers (so your sample can hit $300 w/ rounding)
+            total += TRANS_BROKER_FEE;
+            adminDebug.brokerFee = TRANS_BROKER_FEE;
+
+            // lane surcharge (transport only)
+            const laneSurcharge = calculateLaneSurcharge(origin, destination);
+            total += laneSurcharge;
+            adminDebug.laneSurcharge = laneSurcharge;
           }
+
+          adminDebug.roundedFrom = total;
+
+          // round final price for customer
+          total = roundPrice(total);
 
           const distanceLine = miles.toFixed(1) + " miles";
           const serviceLabel = (serviceType === "local") ? "Local Tow" : "Auction/Port Transport";
@@ -433,6 +458,7 @@
           const shipText = shippingLabel(shippingType);
           const estimateText = money(total);
 
+          // CUSTOMER-FACING OUTPUT (no rate math)
           resultDiv.style.color = "#111827";
           resultDiv.innerHTML =
             "<strong>Estimated cost: " + estimateText + "</strong><br>" +
@@ -441,12 +467,22 @@
             "Vehicle type: " + vehicleText + "<br>" +
             "Shipping: " + shipText + "<br>" +
             (vin ? ("VIN: " + vin + "<br>") : "") +
-            (vinDecoded ? ("VIN decoded: " + vinDecoded + "<br>") : "") +
-            "<span style='color:#6b7280;font-size:13px;'>" + breakdown + "</span>";
+            (vinDecoded ? ("VIN decoded: " + vinDecoded + "<br>") : "");
+
+          // ADMIN-ONLY DEBUG (hidden unless ?admin=1)
+          if (IS_ADMIN) {
+            resultDiv.innerHTML +=
+              "<hr style='margin:10px 0'>" +
+              "<strong>Internal breakdown (admin only)</strong><br>" +
+              "Vehicle multiplier: x" + Number(adminDebug.vMult).toFixed(2) + "<br>" +
+              "Shipping multiplier: x" + Number(adminDebug.sMult).toFixed(2) + "<br>" +
+              (serviceType === "transport" ? ("Broker fee: " + money(adminDebug.brokerFee) + "<br>") : "") +
+              (serviceType === "transport" ? ("Lane surcharge: " + money(adminDebug.laneSurcharge) + "<br>") : "") +
+              "Rounded from: " + money(adminDebug.roundedFrom) + " → " + money(total);
+          }
 
           cta.style.display = "flex";
 
-          // Fill SMS + Email
           smsBtn.href =
             "sms:5083692955?&body=" +
             encodeURIComponent(
@@ -492,8 +528,5 @@
       });
     });
   </script>
-
-  <!-- Optional; kept for future Places autocomplete -->
-  <script async src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDw8Pr5skK_KWzofp7434NsKvnI1ENPJc8&libraries=places"></script>
 </body>
 </html>
