@@ -13,28 +13,27 @@
       --brand-accent-2:#0b1220;
       --brand-success:#16a34a;
       --brand-blue:#2563eb;
-      --brand-warn:#c2410c;
       --border:#e5e7eb;
       --bg:#f3f4f6;
     }
+
     body{font-family:Arial,sans-serif;background:var(--bg);margin:0;padding:0;}
-    .container{max-width:920px;margin:30px auto;background:var(--brand-card);border-radius:14px;padding:24px;box-shadow:0 10px 25px rgba(0,0,0,.08);border:1px solid var(--border);}
+    .container{max-width:820px;margin:40px auto;background:var(--brand-card);border-radius:14px;padding:24px;box-shadow:0 10px 25px rgba(0,0,0,.08);border:1px solid var(--border);}
     .header{display:flex;align-items:center;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:6px;}
     .logo{height:42px;width:auto;display:block;}
     h1{text-align:center;margin:0;font-size:24px;color:var(--brand-text);}
     .subtitle{text-align:center;font-size:14px;color:var(--brand-muted);margin:8px 0 18px;}
-    label{font-weight:bold;font-size:14px;display:block;margin-top:12px;margin-bottom:6px;color:var(--brand-text);}
 
+    label{font-weight:bold;font-size:14px;display:block;margin-top:12px;margin-bottom:6px;color:var(--brand-text);}
     input[type="text"], select{
       width:100%;padding:10px 10px;border-radius:10px;border:1px solid var(--border);
       font-size:14px;box-sizing:border-box;background:#fff;
     }
-
     .row{display:flex;gap:12px;flex-wrap:wrap;}
-    .col{flex:1;min-width:260px;}
+    .col{flex:1;min-width:240px;}
 
-    .checkbox-row{display:flex;align-items:center;margin-top:12px;font-size:14px;color:var(--brand-text);}
-    .checkbox-row input{margin-right:8px;transform:scale(1.05);}
+    .checkbox-row{display:flex;align-items:center;margin-top:12px;font-size:14px;color:var(--brand-text);gap:8px;}
+    .checkbox-row input{transform:scale(1.05);}
 
     button{
       width:100%;margin-top:18px;padding:12px 0;background:var(--brand-accent-2);color:#fff;
@@ -43,14 +42,17 @@
     button:hover{opacity:.92;}
 
     #result{margin-top:16px;font-size:15px;min-height:44px;color:var(--brand-text);}
-    .meta{margin-top:10px;font-size:13px;color:var(--brand-muted);min-height:18px;white-space:pre-wrap;word-break:break-word;}
+    .meta{margin-top:8px;font-size:13px;color:var(--brand-muted);min-height:18px;white-space:pre-wrap;word-break:break-word;}
+    .hint{font-size:12px;color:var(--brand-muted);margin-top:6px;}
+    .hr{height:1px;background:var(--border);margin:18px 0 6px;}
 
     .badge{
       display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;
       background:#fee2e2;color:#7f1d1d;border:1px solid #fecaca;margin-left:6px;
     }
 
-    .disclaimer{margin-top:14px;font-size:12px;color:var(--brand-muted);line-height:1.45;}
+    .disclaimer{margin-top:16px;font-size:12px;color:var(--brand-muted);line-height:1.45;}
+
     .cta{display:none;margin-top:14px;gap:10px;display:flex;flex-wrap:wrap;}
     .cta a{
       flex:1;min-width:160px;text-align:center;padding:11px 12px;color:#fff;
@@ -59,30 +61,21 @@
     .cta .call{background:var(--brand-success);}
     .cta .sms{background:var(--brand-accent-2);}
     .cta .email{background:var(--brand-blue);}
-    .cta .ship{background:#111827;}
-
-    .hint{font-size:12px;color:var(--brand-muted);margin-top:6px;}
-    .hr{height:1px;background:var(--border);margin:18px 0 6px;}
+    .cta .book{background:#111827;}
 
     /* Admin panel */
-    .admin-wrap{display:none;margin-top:20px;border-top:1px solid var(--border);padding-top:18px;}
-    .admin-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px;}
-    .admin-title h2{margin:0;font-size:16px;color:var(--brand-text);}
-    .pill{font-size:12px;padding:4px 10px;border-radius:999px;border:1px solid var(--border);color:var(--brand-muted);}
-    .admin-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;}
-    .admin-card{border:1px solid var(--border);border-radius:12px;padding:12px;background:#fff;}
-    .admin-card h3{margin:0 0 8px 0;font-size:13px;color:var(--brand-text);}
-    .control{display:flex;align-items:center;gap:10px;margin:8px 0;}
-    .control label{margin:0;font-size:12px;color:var(--brand-muted);font-weight:bold;flex:1;}
-    .control input[type="range"]{flex:2;}
-    .val{min-width:72px;text-align:right;font-size:12px;color:var(--brand-text);}
-    .admin-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;}
-    .admin-actions button{margin-top:0;width:auto;padding:10px 14px;border-radius:10px;font-size:13px;}
-    .btn-ghost{background:#fff;color:var(--brand-text);border:1px solid var(--border);}
-    .btn-warn{background:var(--brand-warn);}
-    @media (max-width: 820px){
-      .admin-grid{grid-template-columns:1fr;}
+    #adminPanel{
+      display:none;margin-top:14px;border:1px solid var(--border);border-radius:12px;padding:12px;background:#fafafa;
     }
+    .adminGrid{margin-top:10px;display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+    .adminGrid label{margin-top:0;}
+    .adminGrid input[type="range"]{width:100%;}
+    .adminTop{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;}
+    .adminBtn{
+      width:auto;padding:8px 12px;border-radius:10px;background:#111827;color:#fff;border:none;cursor:pointer;
+    }
+    .adminSmall{margin-top:10px;font-size:12px;color:var(--brand-muted);}
+    .muted{opacity:.55;}
   </style>
 </head>
 
@@ -102,7 +95,7 @@
         <label for="serviceType">Service type</label>
         <select id="serviceType">
           <option value="local">Local Tow (short distance)</option>
-          <option value="transport" selected>Auction / Port Transport (nationwide)</option>
+          <option value="transport" selected>Auction / Transport (nationwide)</option>
         </select>
         <div class="hint">Tip: Use “Transport” for auction → yard/port, long distance, Central Dispatch jobs.</div>
       </div>
@@ -131,9 +124,9 @@
       </div>
 
       <div class="col">
-        <label for="dropType">Drop-off type</label>
-        <select id="dropType">
-          <option value="yard" selected>Shipping yard</option>
+        <label for="dropoffType">Drop-off type</label>
+        <select id="dropoffType">
+          <option value="yard" selected>Shipping yard / Warehouse</option>
           <option value="port">Port / RoRo terminal</option>
         </select>
         <div class="hint">Port/RoRo drop-offs typically cost more (gate, staging, scheduling).</div>
@@ -169,178 +162,121 @@
 
     <div id="result"></div>
 
+    <!-- Admin panel (only visible with ?admin=1) -->
+    <div id="adminPanel">
+      <div class="adminTop">
+        <strong>Admin: Live Rate Tuning</strong>
+        <button id="resetAdmin" class="adminBtn" type="button">Reset</button>
+      </div>
+
+      <div class="adminGrid">
+        <div>
+          <label>Short rate (0–150): <span id="v_rateShort"></span></label>
+          <input id="rateShort" type="range" min="0.5" max="4.0" step="0.05">
+        </div>
+        <div>
+          <label>Mid rate (151–600): <span id="v_rateMid"></span></label>
+          <input id="rateMid" type="range" min="0.5" max="3.0" step="0.05">
+        </div>
+        <div>
+          <label>Long rate (601+): <span id="v_rateLong"></span></label>
+          <input id="rateLong" type="range" min="0.3" max="2.0" step="0.05">
+        </div>
+        <div>
+          <label>Transport minimum: <span id="v_minimum"></span></label>
+          <input id="minimum" type="range" min="0" max="800" step="10">
+        </div>
+        <div>
+          <label>Dispatch fee: <span id="v_dispatchFee"></span></label>
+          <input id="dispatchFee" type="range" min="0" max="250" step="5">
+        </div>
+        <div>
+          <label>Deadhead buffer (miles): <span id="v_deadhead"></span></label>
+          <input id="deadhead" type="range" min="0" max="50" step="1">
+        </div>
+        <div>
+          <label>Port/RoRo fee: <span id="v_portFee"></span></label>
+          <input id="portFee" type="range" min="0" max="300" step="5">
+        </div>
+        <div>
+          <label>Non-runner fee optional: <span id="v_nonRunnerFee"></span></label>
+          <input id="nonRunnerFee" type="range" min="0" max="400" step="5">
+        </div>
+        <div>
+          <label>Round to ($): <span id="v_roundTo"></span></label>
+          <input id="roundTo" type="range" min="1" max="100" step="1">
+        </div>
+        <div>
+          <label>Enclosed multiplier: <span id="v_enclosedMult"></span></label>
+          <input id="enclosedMult" type="range" min="1.1" max="2.5" step="0.05">
+        </div>
+        <div>
+          <label>SUV multiplier: <span id="v_suvMult"></span></label>
+          <input id="suvMult" type="range" min="1.0" max="1.4" step="0.01">
+        </div>
+        <div>
+          <label>Pickup multiplier: <span id="v_pickupMult"></span></label>
+          <input id="pickupMult" type="range" min="1.0" max="1.6" step="0.01">
+        </div>
+      </div>
+
+      <div class="adminSmall">
+        Admin sliders show only with <code>?admin=1</code>. Settings save in your browser (localStorage). Customers won’t see them.
+      </div>
+    </div>
+
     <div id="cta" class="cta">
       <a class="call" href="tel:5083692955">Call Now</a>
       <a id="smsBtn" class="sms" href="sms:5083692955">Request Tow (Text)</a>
       <a id="emailBtn" class="email" href="mailto:info@blautoexport.com">Request Tow (Email)</a>
-      <a id="shipBtn" class="ship" href="#" target="_blank" rel="noopener">Book RoRo / Container</a>
+      <a id="bookBtn" class="book" href="#" target="_blank" rel="noopener">Book RoRo / Container</a>
     </div>
 
     <div class="disclaimer">
       This is a non-binding estimate. Final price may vary based on carrier availability, vehicle condition, timing, access/wait time,
       and port requirements. We’ll confirm a final quote before dispatch.
     </div>
-
-    <!-- ADMIN PANEL (only shows with ?admin=1) -->
-    <div id="adminWrap" class="admin-wrap">
-      <div class="admin-title">
-        <h2>Admin Pricing Controls</h2>
-        <span class="pill">Visible only with <b>?admin=1</b> • Saved in this browser</span>
-      </div>
-
-      <div class="admin-grid">
-        <div class="admin-card">
-          <h3>Tier Rates ($/mile)</h3>
-          <div class="control">
-            <label>0–150 mi rate</label>
-            <input id="rShort" type="range" min="1.20" max="3.50" step="0.05">
-            <div class="val" id="vShort"></div>
-          </div>
-          <div class="control">
-            <label>151–600 mi rate</label>
-            <input id="rMed" type="range" min="0.90" max="2.50" step="0.05">
-            <div class="val" id="vMed"></div>
-          </div>
-          <div class="control">
-            <label>601+ mi rate</label>
-            <input id="rLong" type="range" min="0.55" max="1.50" step="0.05">
-            <div class="val" id="vLong"></div>
-          </div>
-        </div>
-
-        <div class="admin-card">
-          <h3>Fees & Minimums</h3>
-          <div class="control">
-            <label>Transport minimum</label>
-            <input id="rMin" type="range" min="100" max="600" step="25">
-            <div class="val" id="vMin"></div>
-          </div>
-          <div class="control">
-            <label>Dispatch fee</label>
-            <input id="rDispatch" type="range" min="0" max="300" step="25">
-            <div class="val" id="vDispatch"></div>
-          </div>
-          <div class="control">
-            <label>Port/RoRo fee</label>
-            <input id="rPort" type="range" min="0" max="300" step="25">
-            <div class="val" id="vPort"></div>
-          </div>
-          <div class="control">
-            <label>Non-runner fee</label>
-            <input id="rNonRunner" type="range" min="0" max="300" step="25">
-            <div class="val" id="vNonRunner"></div>
-          </div>
-        </div>
-
-        <div class="admin-card">
-          <h3>Multipliers</h3>
-          <div class="control">
-            <label>SUV multiplier</label>
-            <input id="mSuv" type="range" min="1.00" max="1.30" step="0.01">
-            <div class="val" id="vSuv"></div>
-          </div>
-          <div class="control">
-            <label>Pickup multiplier</label>
-            <input id="mPickup" type="range" min="1.00" max="1.40" step="0.01">
-            <div class="val" id="vPickup"></div>
-          </div>
-          <div class="control">
-            <label>Van multiplier</label>
-            <input id="mVan" type="range" min="1.00" max="1.35" step="0.01">
-            <div class="val" id="vVan"></div>
-          </div>
-          <div class="control">
-            <label>Enclosed multiplier</label>
-            <input id="mEnclosed" type="range" min="1.10" max="2.00" step="0.05">
-            <div class="val" id="vEnclosed"></div>
-          </div>
-        </div>
-
-        <div class="admin-card">
-          <h3>Realism Controls</h3>
-          <div class="control">
-            <label>Deadhead buffer (miles)</label>
-            <input id="rDeadhead" type="range" min="0" max="120" step="5">
-            <div class="val" id="vDeadhead"></div>
-          </div>
-          <div class="control">
-            <label>Round to ($)</label>
-            <input id="rRound" type="range" min="1" max="50" step="1">
-            <div class="val" id="vRound"></div>
-          </div>
-          <div class="control">
-            <label>Rounding mode</label>
-            <select id="roundMode" style="flex:2;">
-              <option value="nearest">Nearest</option>
-              <option value="up">Always up</option>
-            </select>
-            <div class="val" id="vRoundMode"></div>
-          </div>
-          <div class="hint">Deadhead buffer adds a small mileage cushion to cover pickup positioning & traffic variability.</div>
-        </div>
-      </div>
-
-      <div class="admin-actions">
-        <button id="saveAdmin">Save settings</button>
-        <button id="resetAdmin" class="btn-warn">Reset to defaults</button>
-        <button id="copyAdmin" class="btn-ghost">Copy settings JSON</button>
-      </div>
-
-      <div class="meta" id="adminMeta"></div>
-    </div>
   </div>
 
   <script>
-    // =========================================================
-    // ROUTES API KEY (insert your key)
-    // =========================================================
+    // =========================
+    // PUT YOUR ROUTES API KEY HERE
+    // =========================
     const GOOGLE_API_KEY = "AIzaSyBY26KUbAP6pSgGb3BBAVP15xjr_6EqFig";
 
-    // Booking page button (your Google Form)
-    const SHIPPING_BOOKING_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdywvgOLKM5mMyZdEucaJLwoLt_G4l_Z0OLD0HE4IAhtok6mQ/viewform";
+    // Booking Form (Google Forms public link)
+    const BOOKING_FORM_URL = "https://docs.google.com/forms/d/e/1FAIpQLSdywvgOLKM5mMyZdEucaJLwoLt_G4l_Z0OLD0HE4IAhtok6mQ/viewform?usp=pp_url&entry.1993602587=Container&entry.270647829=Test+User&entry.1564808048=1234567890&entry.2070516419=test@test.com&entry.1572651423=Ghana&entry.1933990655=Baltimore,+MD&entry.1135344178=Tema&entry.666103640=2018+Toyota+Camry&entry.1074558705=1HGCM82633A004352&entry.1454334897=Run+and+drive&entry.264996793=Copart+Baltimore&entry.886940307=Option+1&entry.380278386=20ft&entry.848469704=Vehicle+only&entry.1330101939=Test+goods&entry.1162964605=Test+submission";
 
-    // Admin toggle
+    // Show admin UI only if ?admin=1
     const IS_ADMIN = new URLSearchParams(window.location.search).get("admin") === "1";
 
-    // =========================================================
-    // DEFAULT PRICING (REALISTIC + COMPETITIVE)
-    // =========================================================
+    // =========================
+    // DEFAULT SETTINGS (admin sliders control these)
+    // =========================
+    const ADMIN_KEY = "bl_admin_rates_v2";
+
     const DEFAULTS = {
-      // Local
-      LOCAL_FLAT_UP_TO_10MI: 125,
-      LOCAL_PER_MILE_AFTER_10: 4.50,
-      LOCAL_NONRUNNER: 50,
+      // Transport tier rates (per mile)
+      rateShort: 2.10,   // 0-150
+      rateMid:   1.15,   // 151-600
+      rateLong:  0.55,   // 601+
 
-      // Tiered transport
-      TRANS_MINIMUM: 250,
-      RATE_SHORT: 2.25,   // 0-150
-      RATE_MED:   1.35,   // 151-600
-      RATE_LONG:  0.80,   // 601+
+      minimum: 250,
+      dispatchFee: 75,
+      deadhead: 10,
+      portFee: 100,
+      nonRunnerFee: 125,
 
-      DISPATCH_FEE: 125,
-      PORT_RORO_FEE: 125,
-      NONRUNNER_FEE: 125,
+      roundTo: 25,
 
-      DEADHEAD_MILES: 20,
-
-      // Multipliers
-      MULT_SEDAN: 1.00,
-      MULT_SUV: 1.05,
-      MULT_PICKUP: 1.10,
-      MULT_VAN: 1.08,
-      MULT_ENCLOSED: 1.60,
-
-      // Rounding
-      ROUND_TO: 25,
-      ROUND_MODE: "nearest"
+      enclosedMult: 1.60,
+      suvMult: 1.08,
+      pickupMult: 1.20
     };
 
-    // Load/save admin settings
-    const STORE_KEY = "bl_auto_export_pricing_v1";
-
-    function loadSettings() {
+    function loadAdmin() {
       try {
-        const raw = localStorage.getItem(STORE_KEY);
+        const raw = localStorage.getItem(ADMIN_KEY);
         if (!raw) return { ...DEFAULTS };
         const parsed = JSON.parse(raw);
         return { ...DEFAULTS, ...parsed };
@@ -348,71 +284,61 @@
         return { ...DEFAULTS };
       }
     }
+    function saveAdmin(s) { localStorage.setItem(ADMIN_KEY, JSON.stringify(s)); }
 
-    function saveSettings(s) {
-      localStorage.setItem(STORE_KEY, JSON.stringify(s));
-    }
+    let ADMIN = loadAdmin();
 
-    function resetSettings() {
-      saveSettings({ ...DEFAULTS });
-      return { ...DEFAULTS };
-    }
-
-    let S = loadSettings();
-
-    // =========================================================
+    // =========================
     // HELPERS
-    // =========================================================
-    function money(n) { return "$" + Number(n).toFixed(2); }
+    // =========================
+    function money(n){ return "$" + Number(n).toFixed(2); }
 
-    function roundPrice(amount) {
-      const step = Math.max(1, Number(S.ROUND_TO) || 1);
-      if (!isFinite(amount)) return amount;
-      if (S.ROUND_MODE === "up") return Math.ceil(amount / step) * step;
-      return Math.round(amount / step) * step;
+    function roundPrice(amount){
+      const r = Math.max(1, Number(ADMIN.roundTo || 1));
+      return Math.round(amount / r) * r;
     }
 
-    function shippingLabel(s) { return (s === "enclosed") ? "Enclosed" : "Open"; }
-
-    function vehicleLabel(v) {
-      return ({
-        sedan: "Sedan/Compact",
-        suv: "SUV/Crossover",
-        pickup: "Pickup Truck",
-        van: "Van",
-        oversize: "Oversize/Heavy (manual quote)"
-      })[v] || v;
+    function vehicleLabel(v){
+      return ({sedan:"Sedan/Compact",suv:"SUV/Crossover",pickup:"Pickup Truck",van:"Van",oversize:"Oversize/Heavy (manual quote)"})[v] || v;
     }
+    function shippingLabel(s){ return s === "enclosed" ? "Enclosed" : "Open"; }
+    function dropoffLabel(t){ return t === "port" ? "Port / RoRo terminal" : "Shipping yard / Warehouse"; }
 
-    function cleanAddress(addr) {
-      return (addr || "").replace(/\s+/g, " ").trim();
-    }
+    function normalizeVin(vin){ return (vin || "").trim().toUpperCase(); }
+    function isValidVinFormat(vin){ return /^[A-HJ-NPR-Z0-9]{17}$/.test(vin); }
 
-    function isPortishText(s) {
-      const t = (s || "").toLowerCase();
-      return /(port|terminal|roro|ro-ro|seaport|pier|dock|harbor|vessel|container)/i.test(t);
-    }
+    async function decodeVinNHTSA(vin){
+      const url = "https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVin/" + encodeURIComponent(vin) + "?format=json";
+      const res = await fetch(url);
+      if(!res.ok) throw new Error("VIN decode failed");
+      const data = await res.json();
 
-    // Tiered rate cost
-    function tieredMileageCost(miles) {
-      const m = Math.max(0, miles);
-      let cost = 0;
-
-      if (m <= 150) {
-        cost = m * S.RATE_SHORT;
-      } else if (m <= 600) {
-        cost = (150 * S.RATE_SHORT) + ((m - 150) * S.RATE_MED);
-      } else {
-        cost = (150 * S.RATE_SHORT) + (450 * S.RATE_MED) + ((m - 600) * S.RATE_LONG);
+      const map = {};
+      for(const item of (data.Results || [])){
+        if(item.Variable && item.Value) map[item.Variable] = item.Value;
       }
 
-      return Math.max(S.TRANS_MINIMUM, cost);
+      const year = (map["Model Year"] || "").trim();
+      const make = (map["Make"] || "").trim();
+      const model = (map["Model"] || "").trim();
+      const bodyClass = (map["Body Class"] || "").trim();
+      const vehicleType = (map["Vehicle Type"] || "").trim();
+
+      return {
+        year, make, model, bodyClass, vehicleType,
+        display: (year + " " + make + " " + model).trim()
+      };
     }
 
-    // =========================================================
-    // ROUTES API (distance)
-    // =========================================================
-    async function getDrivingDistanceMeters(origin, destination) {
+    function suggestVehicleTypeFromVin(decoded){
+      const blob = ((decoded.bodyClass || "") + " " + (decoded.vehicleType || "")).toLowerCase();
+      if(blob.includes("pickup")) return "pickup";
+      if(blob.includes("van")) return "van";
+      if(blob.includes("sport utility") || blob.includes("suv") || blob.includes("multipurpose")) return "suv";
+      return "sedan";
+    }
+
+    async function getDrivingDistanceMeters(origin, destination){
       const res = await fetch("https://routes.googleapis.com/directions/v2:computeRoutes", {
         method: "POST",
         headers: {
@@ -428,64 +354,97 @@
       });
 
       const text = await res.text();
-      if (!res.ok) throw new Error(`Routes API failed (${res.status}): ${text}`);
+      if(!res.ok) throw new Error(`Routes API failed (${res.status}): ${text}`);
       const data = JSON.parse(text);
       const meters = data?.routes?.[0]?.distanceMeters;
-      if (!meters) throw new Error("No route distance returned.");
+      if(!meters) throw new Error("No route distance returned.");
       return meters;
     }
 
-    // =========================================================
-    // VIN VALIDATION + DECODE (NHTSA VPIC - free)
-    // =========================================================
-    function normalizeVin(vin) { return (vin || "").trim().toUpperCase(); }
-    function isValidVinFormat(vin) { return /^[A-HJ-NPR-Z0-9]{17}$/.test(vin); }
+    // Tiered transport cost (miles already includes deadhead)
+    function tieredTransportCost(miles){
+      const m = Math.max(0, miles);
+      const a = Math.min(m, 150);
+      const b = Math.min(Math.max(m - 150, 0), 450); // 151-600
+      const c = Math.max(m - 600, 0);
 
-    async function decodeVinNHTSA(vin) {
-      const url = "https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVin/" + encodeURIComponent(vin) + "?format=json";
-      const res = await fetch(url);
-      if (!res.ok) throw new Error("VIN decode failed");
-      const data = await res.json();
+      const cost =
+        a * Number(ADMIN.rateShort) +
+        b * Number(ADMIN.rateMid) +
+        c * Number(ADMIN.rateLong);
 
-      const map = {};
-      for (const item of (data.Results || [])) {
-        if (item.Variable && item.Value) map[item.Variable] = item.Value;
-      }
+      return Math.max(Number(ADMIN.minimum), cost);
+    }
 
-      const year = (map["Model Year"] || "").trim();
-      const make = (map["Make"] || "").trim();
-      const model = (map["Model"] || "").trim();
-      const bodyClass = (map["Body Class"] || "").trim();
-      const vehicleType = (map["Vehicle Type"] || "").trim();
+    // Multipliers for vehicle + carrier
+    function getVehicleMultiplier(vehicleType){
+      if(vehicleType === "suv") return Number(ADMIN.suvMult);
+      if(vehicleType === "pickup") return Number(ADMIN.pickupMult);
+      if(vehicleType === "van") return 1.15;
+      return 1.00;
+    }
+    function getCarrierMultiplier(shippingType){
+      if(shippingType === "enclosed") return Number(ADMIN.enclosedMult);
+      return 1.00;
+    }
 
-      return {
-        year, make, model, bodyClass, vehicleType,
-        display: (year + " " + make + " " + model).trim()
+    // =========================
+    // ADMIN PANEL UI
+    // =========================
+    function initAdminPanel(){
+      const panel = document.getElementById("adminPanel");
+      if(!panel) return;
+      if(!IS_ADMIN) return;
+
+      panel.style.display = "block";
+
+      const bind = (id, key, fmt) => {
+        const el = document.getElementById(id);
+        const out = document.getElementById("v_" + id);
+        el.value = ADMIN[key];
+        out.textContent = fmt ? fmt(ADMIN[key]) : ADMIN[key];
+
+        el.addEventListener("input", () => {
+          ADMIN[key] = Number(el.value);
+          out.textContent = fmt ? fmt(ADMIN[key]) : ADMIN[key];
+          saveAdmin(ADMIN);
+        });
       };
+
+      bind("rateShort", "rateShort", v => "$" + v.toFixed(2) + "/mi");
+      bind("rateMid", "rateMid", v => "$" + v.toFixed(2) + "/mi");
+      bind("rateLong", "rateLong", v => "$" + v.toFixed(2) + "/mi");
+      bind("minimum", "minimum", v => "$" + v.toFixed(0));
+      bind("dispatchFee", "dispatchFee", v => "$" + v.toFixed(0));
+      bind("deadhead", "deadhead", v => v.toFixed(0) + " mi");
+      bind("portFee", "portFee", v => "$" + v.toFixed(0));
+      bind("nonRunnerFee", "nonRunnerFee", v => "$" + v.toFixed(0));
+      bind("roundTo", "roundTo", v => "$" + v.toFixed(0));
+      bind("enclosedMult", "enclosedMult", v => "x" + v.toFixed(2));
+      bind("suvMult", "suvMult", v => "x" + v.toFixed(2));
+      bind("pickupMult", "pickupMult", v => "x" + v.toFixed(2));
+
+      document.getElementById("resetAdmin").addEventListener("click", () => {
+        ADMIN = { ...DEFAULTS };
+        saveAdmin(ADMIN);
+        location.reload();
+      });
     }
 
-    function suggestVehicleTypeFromVin(decoded) {
-      const blob = ((decoded.bodyClass || "") + " " + (decoded.vehicleType || "")).toLowerCase();
-      if (blob.includes("pickup")) return "pickup";
-      if (blob.includes("van")) return "van";
-      if (blob.includes("sport utility") || blob.includes("suv") || blob.includes("multipurpose")) return "suv";
-      return "sedan";
-    }
+    // =========================
+    // MAIN UI LOGIC
+    // =========================
+    window.addEventListener("load", () => {
+      initAdminPanel();
 
-    // =========================================================
-    // UI
-    // =========================================================
-    window.addEventListener("load", function () {
       const btn = document.getElementById("calcBtn");
-
       const serviceTypeEl = document.getElementById("serviceType");
       const vehicleTypeEl = document.getElementById("vehicleType");
       const shippingTypeEl = document.getElementById("shippingType");
-      const dropTypeEl = document.getElementById("dropType");
+      const dropoffTypeEl = document.getElementById("dropoffType");
 
       const vinEl = document.getElementById("vin");
       const vinInfoEl = document.getElementById("vinInfo");
-
       const pickupInput = document.getElementById("pickup");
       const dropoffInput = document.getElementById("dropoff");
 
@@ -495,102 +454,32 @@
       const cta = document.getElementById("cta");
       const smsBtn = document.getElementById("smsBtn");
       const emailBtn = document.getElementById("emailBtn");
-      const shipBtn = document.getElementById("shipBtn");
+      const bookBtn = document.getElementById("bookBtn");
 
-      shipBtn.href = SHIPPING_BOOKING_URL;
+      // Always show booking button after calc, link to form
+      bookBtn.href = BOOKING_FORM_URL;
 
-      // Admin panel init
-      const adminWrap = document.getElementById("adminWrap");
-      const adminMeta = document.getElementById("adminMeta");
-      if (IS_ADMIN) adminWrap.style.display = "block";
-
-      // Bind admin controls
-      function setVal(id, text){ const el = document.getElementById(id); if (el) el.textContent = text; }
-
-      function bindRange(rangeId, valId, get, set, fmt=(x)=>x) {
-        const r = document.getElementById(rangeId);
-        if (!r) return;
-        r.value = get();
-        setVal(valId, fmt(get()));
-        r.addEventListener("input", () => {
-          set(Number(r.value));
-          setVal(valId, fmt(get()));
-          adminMeta.textContent = "Tip: click Calculate Estimate again to see the new pricing.";
-        });
-      }
-
-      function bindSelect(selId, valId, get, set) {
-        const s = document.getElementById(selId);
-        if (!s) return;
-        s.value = get();
-        setVal(valId, get());
-        s.addEventListener("change", () => {
-          set(s.value);
-          setVal(valId, get());
-          adminMeta.textContent = "Rounding mode updated.";
-        });
-      }
-
-      if (IS_ADMIN) {
-        bindRange("rShort","vShort", ()=>S.RATE_SHORT, v=>S.RATE_SHORT=v, v=>"$"+v.toFixed(2)+"/mi");
-        bindRange("rMed","vMed", ()=>S.RATE_MED, v=>S.RATE_MED=v, v=>"$"+v.toFixed(2)+"/mi");
-        bindRange("rLong","vLong", ()=>S.RATE_LONG, v=>S.RATE_LONG=v, v=>"$"+v.toFixed(2)+"/mi");
-
-        bindRange("rMin","vMin", ()=>S.TRANS_MINIMUM, v=>S.TRANS_MINIMUM=v, v=>money(v));
-        bindRange("rDispatch","vDispatch", ()=>S.DISPATCH_FEE, v=>S.DISPATCH_FEE=v, v=>money(v));
-        bindRange("rPort","vPort", ()=>S.PORT_RORO_FEE, v=>S.PORT_RORO_FEE=v, v=>money(v));
-        bindRange("rNonRunner","vNonRunner", ()=>S.NONRUNNER_FEE, v=>S.NONRUNNER_FEE=v, v=>money(v));
-
-        bindRange("mSuv","vSuv", ()=>S.MULT_SUV, v=>S.MULT_SUV=v, v=>"x"+v.toFixed(2));
-        bindRange("mPickup","vPickup", ()=>S.MULT_PICKUP, v=>S.MULT_PICKUP=v, v=>"x"+v.toFixed(2));
-        bindRange("mVan","vVan", ()=>S.MULT_VAN, v=>S.MULT_VAN=v, v=>"x"+v.toFixed(2));
-        bindRange("mEnclosed","vEnclosed", ()=>S.MULT_ENCLOSED, v=>S.MULT_ENCLOSED=v, v=>"x"+v.toFixed(2));
-
-        bindRange("rDeadhead","vDeadhead", ()=>S.DEADHEAD_MILES, v=>S.DEADHEAD_MILES=v, v=>Math.round(v)+" mi");
-        bindRange("rRound","vRound", ()=>S.ROUND_TO, v=>S.ROUND_TO=v, v=>"$"+Math.round(v));
-        bindSelect("roundMode","vRoundMode", ()=>S.ROUND_MODE, v=>S.ROUND_MODE=v);
-
-        document.getElementById("saveAdmin").addEventListener("click", () => {
-          saveSettings(S);
-          adminMeta.textContent = "Saved ✅ (stored in this browser).";
-        });
-
-        document.getElementById("resetAdmin").addEventListener("click", () => {
-          S = resetSettings();
-          location.reload();
-        });
-
-        document.getElementById("copyAdmin").addEventListener("click", async () => {
-          const txt = JSON.stringify(S, null, 2);
-          try {
-            await navigator.clipboard.writeText(txt);
-            adminMeta.textContent = "Copied settings JSON ✅";
-          } catch {
-            adminMeta.textContent = txt;
-          }
-        });
-      }
-
-      btn.addEventListener("click", async function () {
-        const serviceType = serviceTypeEl.value;
-        const carrierType = shippingTypeEl.value;
-        const dropType = dropTypeEl.value;
-
-        const isNonRunner = nonRunnerEl.checked;
-
+      btn.addEventListener("click", async () => {
         cta.style.display = "none";
+        resultDiv.style.color = "#111827";
         vinInfoEl.textContent = "";
 
-        const origin = cleanAddress(pickupInput.value);
-        const destination = cleanAddress(dropoffInput.value);
+        const origin = (pickupInput.value || "").trim();
+        const destination = (dropoffInput.value || "").trim();
 
-        if (!origin || !destination) {
+        const serviceType = serviceTypeEl.value;     // local|transport
+        const vehicleType = vehicleTypeEl.value;
+        const shippingType = shippingTypeEl.value;
+        const dropoffType = dropoffTypeEl.value;     // yard|port
+        const isNonRunner = nonRunnerEl.checked;
+
+        if(!origin || !destination){
           resultDiv.style.color = "red";
           resultDiv.textContent = "Please enter both pickup and drop-off addresses.";
           return;
         }
 
-        if (vehicleTypeEl.value === "oversize") {
+        if(vehicleType === "oversize"){
           resultDiv.style.color = "red";
           resultDiv.textContent = "Oversize/Heavy vehicles require a manual quote. Please call or text.";
           cta.style.display = "flex";
@@ -600,82 +489,72 @@
         // VIN decode (optional)
         const vin = normalizeVin(vinEl.value);
         let vinDecoded = "";
-        if (vin) {
-          if (!isValidVinFormat(vin)) {
+        if(vin){
+          if(!isValidVinFormat(vin)){
             resultDiv.style.color = "red";
             resultDiv.textContent = "VIN looks invalid (must be 17 chars; no I/O/Q). Please check and try again.";
             return;
           }
           vinInfoEl.textContent = "Decoding VIN...";
-          try {
-            const vinMeta = await decodeVinNHTSA(vin);
-            vinDecoded = vinMeta.display || "";
+          try{
+            const meta = await decodeVinNHTSA(vin);
+            vinDecoded = meta.display || "";
             vinInfoEl.textContent = vinDecoded ? ("VIN decoded: " + vinDecoded) : "VIN decoded (details unavailable).";
-            vehicleTypeEl.value = suggestVehicleTypeFromVin(vinMeta);
-          } catch (e) {
+            vehicleTypeEl.value = suggestVehicleTypeFromVin(meta);
+          }catch{
             vinInfoEl.textContent = "VIN decode failed (still calculating estimate).";
           }
         }
 
-        resultDiv.style.color = "#111827";
         resultDiv.textContent = "Calculating distance and estimate...";
 
-        try {
+        try{
           const meters = await getDrivingDistanceMeters(origin, destination);
-          const miles = (meters / 1609.34);
+          const milesRaw = meters / 1609.34;
+          const miles = milesRaw + Number(ADMIN.deadhead); // deadhead buffer
 
-          // Realism: add deadhead buffer for transport (small cushion)
-          const milesForPricing = (serviceType === "transport")
-            ? (miles + (Number(S.DEADHEAD_MILES) || 0))
-            : miles;
-
-          // Multipliers
-          const vehicleType = vehicleTypeEl.value;
-          const vMult =
-            vehicleType === "sedan" ? S.MULT_SEDAN :
-            vehicleType === "suv" ? S.MULT_SUV :
-            vehicleType === "pickup" ? S.MULT_PICKUP :
-            vehicleType === "van" ? S.MULT_VAN : 1.0;
-
-          const sMult = (carrierType === "enclosed") ? S.MULT_ENCLOSED : 1.0;
+          const vMult = getVehicleMultiplier(vehicleTypeEl.value);
+          const cMult = getCarrierMultiplier(shippingType);
 
           let total = 0;
 
-          if (serviceType === "local") {
-            const baseLocal = (miles <= 10)
-              ? S.LOCAL_FLAT_UP_TO_10MI
-              : (S.LOCAL_FLAT_UP_TO_10MI + ((miles - 10) * S.LOCAL_PER_MILE_AFTER_10));
+          if(serviceType === "local"){
+            // Simple local model: flat up to 10mi + per mile after (editable here if you want sliders too)
+            const LOCAL_FLAT_UP_TO_10MI = 125;
+            const LOCAL_PER_MILE_AFTER_10 = 4.50;
+            const LOCAL_NONRUNNER = 50;
 
-            total = baseLocal + (isNonRunner ? S.LOCAL_NONRUNNER : 0);
+            const baseLocal = (milesRaw <= 10)
+              ? LOCAL_FLAT_UP_TO_10MI
+              : (LOCAL_FLAT_UP_TO_10MI + ((milesRaw - 10) * LOCAL_PER_MILE_AFTER_10));
+
+            total = baseLocal + (isNonRunner ? LOCAL_NONRUNNER : 0);
             total = total * vMult;
+            total = roundPrice(total);
           } else {
-            // Tiered pricing
-            const mileageCost = tieredMileageCost(milesForPricing);
+            // Transport
+            let base = tieredTransportCost(miles);
+            base += Number(ADMIN.dispatchFee);
 
-            // Port adjustment: based on dropdown OR destination keywords
-            const isPortDrop = (dropType === "port") || isPortishText(destination);
+            // Port/RoRo fee only if dropoff type = port
+            if(dropoffType === "port") base += Number(ADMIN.portFee);
 
-            const portFee = isPortDrop ? (Number(S.PORT_RORO_FEE) || 0) : 0;
+            // Non-runner add-on
+            if(isNonRunner) base += Number(ADMIN.nonRunnerFee);
 
-            const baseTransport =
-              (Number(S.DISPATCH_FEE) || 0) +
-              mileageCost +
-              (isNonRunner ? (Number(S.NONRUNNER_FEE) || 0) : 0) +
-              portFee;
-
-            total = baseTransport * vMult * sMult;
+            // Apply multipliers
+            total = base * vMult * cMult;
+            total = roundPrice(total);
           }
 
-          total = roundPrice(total);
-
           const serviceLabel = (serviceType === "local") ? "Local Tow" : "Auction/Port Transport";
-          const distanceLine = miles.toFixed(1) + " miles";
+          const distanceLine = milesRaw.toFixed(1) + " miles";
           const vehicleText = vehicleLabel(vehicleTypeEl.value);
-          const carrierText = shippingLabel(carrierType);
-          const dropText = (dropType === "port") ? "Port / RoRo terminal" : "Shipping yard";
+          const carrierText = shippingLabel(shippingType);
+          const dropoffText = dropoffLabel(dropoffType);
           const estimateText = money(total);
 
-          // Customer-facing output (NO formula)
+          // Customer output (no formula)
           resultDiv.style.color = "#111827";
           resultDiv.innerHTML =
             "<strong>Estimated cost: " + estimateText + "</strong><br>" +
@@ -683,14 +562,13 @@
             "Service: " + serviceLabel + "<br>" +
             "Vehicle type: " + vehicleText + "<br>" +
             "Carrier: " + carrierText + "<br>" +
-            "Drop-off type: " + dropText + "<br>" +
+            (serviceType === "transport" ? ("Drop-off type: " + dropoffText + "<br>") : "") +
             (vin ? ("VIN: " + vin + "<br>") : "") +
             (vinDecoded ? ("VIN decoded: " + vinDecoded + "<br>") : "");
 
-          // CTA
           cta.style.display = "flex";
 
-          // Fill SMS + Email
+          // Prefill messages
           const nonRunnerText = isNonRunner ? "Yes" : "No";
 
           smsBtn.href =
@@ -698,16 +576,16 @@
             encodeURIComponent(
               "Hi B-L Auto Export, I'd like a quote/booking.\n" +
               "Service: " + serviceLabel + "\n" +
-              "Vehicle type: " + vehicleText + "\n" +
+              "Vehicle: " + vehicleText + "\n" +
               "Carrier: " + carrierText + "\n" +
-              "Drop-off type: " + dropText + "\n" +
+              (serviceType === "transport" ? ("Drop-off type: " + dropoffText + "\n") : "") +
               (vin ? ("VIN: " + vin + "\n") : "") +
               (vinDecoded ? ("VIN decoded: " + vinDecoded + "\n") : "") +
               "Pickup: " + origin + "\n" +
               "Drop-off: " + destination + "\n" +
               "Distance: " + distanceLine + "\n" +
               "Non-runner: " + nonRunnerText + "\n" +
-              "Estimated cost: " + estimateText
+              "Estimated: " + estimateText
             );
 
           emailBtn.href =
@@ -717,23 +595,35 @@
             encodeURIComponent(
               "Hello,\n\nI want to request a quote/booking.\n\n" +
               "Service: " + serviceLabel + "\n" +
-              "Vehicle type: " + vehicleText + "\n" +
+              "Vehicle: " + vehicleText + "\n" +
               "Carrier: " + carrierText + "\n" +
-              "Drop-off type: " + dropText + "\n" +
+              (serviceType === "transport" ? ("Drop-off type: " + dropoffText + "\n") : "") +
               (vin ? ("VIN: " + vin + "\n") : "") +
               (vinDecoded ? ("VIN decoded: " + vinDecoded + "\n") : "") +
               "Pickup: " + origin + "\n" +
               "Drop-off: " + destination + "\n" +
               "Distance: " + distanceLine + "\n" +
               "Non-runner: " + nonRunnerText + "\n" +
-              "Estimated cost: " + estimateText + "\n\n" +
+              "Estimated: " + estimateText + "\n\n" +
               "Thanks"
             );
 
-        } catch (err) {
+          // Admin-only breakdown appended (optional)
+          if(IS_ADMIN){
+            resultDiv.innerHTML +=
+              "<hr style='margin:10px 0;border:none;border-top:1px solid #e5e7eb;'>" +
+              "<strong>Admin notes</strong><br>" +
+              "Deadhead buffer used: " + Number(ADMIN.deadhead).toFixed(0) + " mi<br>" +
+              "Vehicle mult: x" + vMult.toFixed(2) + "<br>" +
+              "Carrier mult: x" + cMult.toFixed(2) + "<br>" +
+              "Tier rates: " + money(ADMIN.rateShort) + "/mi, " + money(ADMIN.rateMid) + "/mi, " + money(ADMIN.rateLong) + "/mi<br>" +
+              "Min: " + money(ADMIN.minimum) + " • Dispatch: " + money(ADMIN.dispatchFee) +
+              " • Port fee: " + money(ADMIN.portFee) + " • Non-runner: " + money(ADMIN.nonRunnerFee);
+          }
+
+        }catch(err){
           resultDiv.style.color = "red";
-          resultDiv.textContent =
-            "Unable to calculate distance. Please verify addresses and try again. (" + err.message + ")";
+          resultDiv.textContent = "Unable to calculate distance. (" + err.message + ")";
         }
       });
     });
