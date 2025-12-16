@@ -7,11 +7,9 @@
 
   <style>
     :root{
-      --brand-bg:#0b0f14;
       --brand-card:#ffffff;
       --brand-text:#111827;
       --brand-muted:#6b7280;
-      --brand-accent:#c1121f;
       --brand-accent-2:#111827;
       --brand-success:#16a34a;
       --brand-blue:#2563eb;
@@ -143,88 +141,85 @@
 
   <script>
     // =====================
-    // YOUR BUSINESS SETTINGS
+    // API KEY (restricted to your GitHub Pages + Routes API + Geocoding API)
     // =====================
+    const GOOGLE_API_KEY = "PASTE_YOUR_KEY_HERE";
 
-    // Local Tow pricing
+    // =====================
+    // BUSINESS SETTINGS
+    // =====================
     const LOCAL_FLAT_UP_TO_10MI = 125;
     const LOCAL_PER_MILE_AFTER_10 = 4.50;
     const LOCAL_NONRUNNER = 50;
 
-    // Transport pricing
     const TRANS_MINIMUM = 200;
     const TRANS_PER_MILE = 1.50;
     const TRANS_NONRUNNER = 125;
 
-    // Broker fee (transport only; AFTER multipliers)
     const TRANS_BROKER_FEE = 70;
-
-    // Add-ons
     const PORT_EXPORT_FEE = 75;
 
-    // Vehicle multipliers
-    const VEHICLE_MULTIPLIERS = {
-      sedan: 1.00,
-      suv: 1.15,
-      pickup: 1.25,
-      van: 1.20
-    };
+    const VEHICLE_MULTIPLIERS = { sedan: 1.00, suv: 1.15, pickup: 1.25, van: 1.20 };
+    const SHIPPING_MULTIPLIERS = { open: 1.00, enclosed: 1.60 };
 
-    // Shipping multipliers
-    const SHIPPING_MULTIPLIERS = {
-      open: 1.00,
-      enclosed: 1.60
-    };
-
-    // =====================
-    // PRICE ROUNDING
-    // =====================
+    // Rounding
     const ROUNDING_MODE = "nearest"; // "nearest" | "up"
     const ROUND_TO = 25;
-
-    function roundPrice(amount) {
+    function roundPrice(amount){
       if (!isFinite(amount)) return amount;
-      if (ROUNDING_MODE === "up") return Math.ceil(amount / ROUND_TO) * ROUND_TO;
-      return Math.round(amount / ROUND_TO) * ROUND_TO;
+      return (ROUNDING_MODE === "up")
+        ? Math.ceil(amount / ROUND_TO) * ROUND_TO
+        : Math.round(amount / ROUND_TO) * ROUND_TO;
     }
 
-    // =====================
-    // LANE SURCHARGES
-    // =====================
+    // Lane surcharges
     const LANE_SURCHARGES = [
       { name: "Northeast congestion", match: /\b(NY|NJ|PA|MA|CT|MD|RI|NH|VT|ME)\b/i, fee: 50 },
       { name: "Port lane premium", match: /(port|seaport|terminal|roro|ro-ro)/i, fee: 75 }
     ];
-
-    function calculateLaneSurcharge(origin, destination) {
-      let surcharge = 0;
-      for (const lane of LANE_SURCHARGES) {
-        if (lane.match.test(origin) || lane.match.test(destination)) surcharge += lane.fee;
+    function calculateLaneSurcharge(origin, destination){
+      let s = 0;
+      for (const lane of LANE_SURCHARGES){
+        if (lane.match.test(origin) || lane.match.test(destination)) s += lane.fee;
       }
-      return surcharge;
+      return s;
     }
 
-    // =====================
-    // ADMIN MODE (hidden)
-    // =====================
+    // Admin mode (?admin=1)
     const IS_ADMIN = new URLSearchParams(window.location.search).get("admin") === "1";
 
-    // =====================
-    // ROUTES API
-    // =====================
-    const GOOGLE_API_KEY = "YOUR_GOOGLE_ROUTES_API_KEY"; // <-- paste your restricted key here
+    function money(n){ return "$" + Number(n).toFixed(2); }
 
-    function cleanAddress(addr) {
+    function cleanAddress(addr){
       return (addr || "")
         .replace(/contact info.*$/i, "")
         .replace(/\s+/g, " ")
         .trim();
     }
 
-    async function getDrivingDistanceMeters(originRaw, destinationRaw) {
-      const origin = cleanAddress(originRaw);
-      const destination = cleanAddress(destinationRaw);
+    // =====================
+    // GEOCODING (address -> lat/lng)
+    // =====================
+    async function geocodeAddress(address){
+      const url = "https://maps.googleapis.com/maps/api/geocode/json?address=" +
+        encodeURIComponent(address) + "&key=" + encodeURIComponent(GOOGLE_API_KEY);
 
+      const res = await fetch(url);
+      const data = await res.json();
+
+      if (!res.ok) throw new Error("Geocoding HTTP error: " + res.status);
+      if (data.status !== "OK" || !data.results?.length){
+        throw new Error("Geocoding failed: " + (data.error_message || data.status));
+      }
+
+      const loc = data.results[0].geometry.location;
+      return { lat: loc.lat, lng: loc.lng, formatted: data.results[0].formatted_address };
+    }
+
+    // =====================
+    // ROUTES (lat/lng -> distanceMeters)
+    // =====================
+    async function routeDistanceMeters(originLL, destLL){
       const res = await fetch("https://routes.googleapis.com/directions/v2:computeRoutes", {
         method: "POST",
         headers: {
@@ -233,43 +228,33 @@
           "X-Goog-FieldMask": "routes.distanceMeters"
         },
         body: JSON.stringify({
-          origin: { address: origin },
-          destination: { address: destination },
+          origin: { location: { latLng: { latitude: originLL.lat, longitude: originLL.lng } } },
+          destination: { location: { latLng: { latitude: destLL.lat, longitude: destLL.lng } } },
           travelMode: "DRIVE",
-          routingPreference: "TRAFFIC_AWARE",
-          languageCode: "en-US",
-          units: "IMPERIAL",
-          regionCode: "US"
+          routingPreference: "TRAFFIC_AWARE"
         })
       });
 
       const text = await res.text();
-      if (!res.ok) throw new Error(`Routes API failed (${res.status}): ${text}`);
+      if (!res.ok) throw new Error("Routes failed (" + res.status + "): " + text);
 
       const data = JSON.parse(text);
       const meters = data?.routes?.[0]?.distanceMeters;
-      if (!meters) throw new Error("No route distance returned.");
+      if (!meters) throw new Error("Routes returned no distance.");
       return meters;
     }
 
-    function money(n) { return "$" + Number(n).toFixed(2); }
+    // VIN decode (optional)
+    function normalizeVin(vin){ return (vin || "").trim().toUpperCase(); }
+    function isValidVinFormat(vin){ return /^[A-HJ-NPR-Z0-9]{17}$/.test(vin); }
 
-    // =====================
-    // VIN decode
-    // =====================
-    function normalizeVin(vin) { return (vin || "").trim().toUpperCase(); }
-    function isValidVinFormat(vin) { return /^[A-HJ-NPR-Z0-9]{17}$/.test(vin); }
-
-    async function decodeVinNHTSA(vin) {
+    async function decodeVinNHTSA(vin){
       const url = "https://vpic.nhtsa.dot.gov/api/vehicles/DecodeVin/" + encodeURIComponent(vin) + "?format=json";
       const res = await fetch(url);
       if (!res.ok) throw new Error("VIN decode failed");
       const data = await res.json();
-
       const map = {};
-      for (const item of (data.Results || [])) {
-        if (item.Variable && item.Value) map[item.Variable] = item.Value;
-      }
+      for (const item of (data.Results || [])) if (item.Variable && item.Value) map[item.Variable] = item.Value;
 
       const year = (map["Model Year"] || "").trim();
       const make = (map["Make"] || "").trim();
@@ -277,10 +262,10 @@
       const bodyClass = (map["Body Class"] || "").trim();
       const vehicleType = (map["Vehicle Type"] || "").trim();
 
-      return { year, make, model, bodyClass, vehicleType, display: (year + " " + make + " " + model).trim() };
+      return { bodyClass, vehicleType, display: (year + " " + make + " " + model).trim() };
     }
 
-    function suggestVehicleTypeFromVin(decoded) {
+    function suggestVehicleTypeFromVin(decoded){
       const blob = ((decoded.bodyClass || "") + " " + (decoded.vehicleType || "")).toLowerCase();
       if (blob.includes("pickup")) return "pickup";
       if (blob.includes("van")) return "van";
@@ -288,21 +273,13 @@
       return "sedan";
     }
 
-    function vehicleLabel(v) {
-      return ({
-        sedan: "Sedan/Compact",
-        suv: "SUV/Crossover",
-        pickup: "Pickup Truck",
-        van: "Van",
-        oversize: "Oversize/Heavy (manual quote)"
-      })[v] || v;
+    function vehicleLabel(v){
+      return ({sedan:"Sedan/Compact",suv:"SUV/Crossover",pickup:"Pickup Truck",van:"Van",oversize:"Oversize/Heavy (manual quote)"})[v] || v;
     }
+    function shippingLabel(s){ return (s === "enclosed") ? "Enclosed" : "Open"; }
 
-    function shippingLabel(s) { return (s === "enclosed") ? "Enclosed" : "Open"; }
-
-    window.addEventListener("load", function () {
+    window.addEventListener("load", function(){
       const btn = document.getElementById("calcBtn");
-
       const serviceTypeEl = document.getElementById("serviceType");
       const vehicleTypeEl = document.getElementById("vehicleType");
       const shippingTypeEl = document.getElementById("shippingType");
@@ -322,7 +299,7 @@
       const smsBtn = document.getElementById("smsBtn");
       const emailBtn = document.getElementById("emailBtn");
 
-      function syncPortRow() {
+      function syncPortRow(){
         const isTransport = serviceTypeEl.value === "transport";
         portRow.classList.toggle("muted", !isTransport);
         portExportEl.disabled = !isTransport;
@@ -331,92 +308,84 @@
       serviceTypeEl.addEventListener("change", syncPortRow);
       syncPortRow();
 
-      btn.addEventListener("click", async function () {
+      btn.addEventListener("click", async function(){
+        cta.style.display = "none";
+        vinInfoEl.textContent = "";
+        resultDiv.style.color = "#111827";
+        resultDiv.textContent = "Validating inputs...";
+
         const serviceType = serviceTypeEl.value;
         const shippingType = shippingTypeEl.value;
-
         const isNonRunner = nonRunnerEl.checked;
         const isPortExport = portExportEl.checked && serviceType === "transport";
 
-        cta.style.display = "none";
-        vinInfoEl.textContent = "";
-
-        const pickupRaw = pickupInput.value;
-        const dropoffRaw = dropoffInput.value;
-
-        const origin = cleanAddress(pickupRaw);
-        const destination = cleanAddress(dropoffRaw);
-
-        if (!origin || !destination) {
-          resultDiv.style.color = "red";
-          resultDiv.textContent = "Please enter both pickup and drop-off addresses.";
-          return;
-        }
-
-        if (vehicleTypeEl.value === "oversize") {
+        if (vehicleTypeEl.value === "oversize"){
           resultDiv.style.color = "red";
           resultDiv.textContent = "Oversize/Heavy vehicles require a manual quote. Please call or text.";
           cta.style.display = "flex";
           return;
         }
 
+        const originAddr = cleanAddress(pickupInput.value);
+        const destAddr = cleanAddress(dropoffInput.value);
+
+        if (!originAddr || !destAddr){
+          resultDiv.style.color = "red";
+          resultDiv.textContent = "Please enter both pickup and drop-off addresses.";
+          return;
+        }
+
         // VIN decode optional
         const vin = normalizeVin(vinEl.value);
         let vinDecoded = "";
-
-        if (vin) {
-          if (!isValidVinFormat(vin)) {
+        if (vin){
+          if (!isValidVinFormat(vin)){
             resultDiv.style.color = "red";
-            resultDiv.textContent = "VIN looks invalid (must be 17 chars; no I/O/Q). Please check and try again.";
+            resultDiv.textContent = "VIN looks invalid (must be 17 chars; no I/O/Q).";
             return;
           }
           vinInfoEl.textContent = "Decoding VIN...";
-          try {
-            const vinMeta = await decodeVinNHTSA(vin);
-            vinDecoded = vinMeta.display || "";
-            vinInfoEl.textContent = vinDecoded ? ("VIN decoded: " + vinDecoded) : "VIN decoded (details unavailable).";
-            vehicleTypeEl.value = suggestVehicleTypeFromVin(vinMeta);
-          } catch (e) {
+          try{
+            const meta = await decodeVinNHTSA(vin);
+            vinDecoded = meta.display || "";
+            vinInfoEl.textContent = vinDecoded ? ("VIN decoded: " + vinDecoded) : "VIN decoded.";
+            vehicleTypeEl.value = suggestVehicleTypeFromVin(meta);
+          }catch(e){
             vinInfoEl.textContent = "VIN decode failed (still calculating estimate).";
           }
         }
 
-        resultDiv.style.color = "#111827";
-        resultDiv.textContent = "Calculating distance and estimate...";
+        try{
+          resultDiv.textContent = "Geocoding addresses...";
+          const [oLL, dLL] = await Promise.all([geocodeAddress(originAddr), geocodeAddress(destAddr)]);
 
-        try {
-          const meters = await getDrivingDistanceMeters(origin, destination);
+          resultDiv.textContent = "Calculating route distance...";
+          const meters = await routeDistanceMeters(oLL, dLL);
           const miles = meters / 1609.34;
 
           const vMult = VEHICLE_MULTIPLIERS[vehicleTypeEl.value] || 1.0;
           const sMult = SHIPPING_MULTIPLIERS[shippingType] || 1.0;
 
           let total = 0;
-          let admin = { vMult, sMult, brokerFee: 0, lane: 0, roundedFrom: 0 };
+          let admin = { vMult, sMult, brokerFee: 0, lane: 0, roundedFrom: 0, oFmt: oLL.formatted, dFmt: dLL.formatted };
 
-          if (serviceType === "local") {
+          if (serviceType === "local"){
             const baseLocal = (miles <= 10)
               ? LOCAL_FLAT_UP_TO_10MI
               : (LOCAL_FLAT_UP_TO_10MI + ((miles - 10) * LOCAL_PER_MILE_AFTER_10));
-
-            total = baseLocal + (isNonRunner ? LOCAL_NONRUNNER : 0);
-            total = total * vMult;
+            total = (baseLocal + (isNonRunner ? LOCAL_NONRUNNER : 0)) * vMult;
           } else {
             const mileageCost = miles * TRANS_PER_MILE;
-
             const baseTransport =
               Math.max(TRANS_MINIMUM, mileageCost) +
               (isNonRunner ? TRANS_NONRUNNER : 0) +
               (isPortExport ? PORT_EXPORT_FEE : 0);
 
             total = baseTransport * vMult * sMult;
+            total += TRANS_BROKER_FEE; admin.brokerFee = TRANS_BROKER_FEE;
 
-            total += TRANS_BROKER_FEE;
-            admin.brokerFee = TRANS_BROKER_FEE;
-
-            const lane = calculateLaneSurcharge(origin, destination);
-            total += lane;
-            admin.lane = lane;
+            const lane = calculateLaneSurcharge(originAddr, destAddr);
+            total += lane; admin.lane = lane;
           }
 
           admin.roundedFrom = total;
@@ -430,7 +399,7 @@
           const shipText = shippingLabel(shippingType);
           const estimateText = money(total);
 
-          // Customer-facing (NO rate breakdown)
+          // Customer facing (no rate math)
           resultDiv.style.color = "#111827";
           resultDiv.innerHTML =
             "<strong>Estimated cost: " + estimateText + "</strong><br>" +
@@ -441,15 +410,14 @@
             (vin ? ("VIN: " + vin + "<br>") : "") +
             (vinDecoded ? ("VIN decoded: " + vinDecoded + "<br>") : "");
 
-          // Admin-only debug (visit ?admin=1)
-          if (IS_ADMIN) {
+          if (IS_ADMIN){
             resultDiv.innerHTML +=
               "<hr style='margin:10px 0'>" +
               "<strong>Admin debug</strong><br>" +
-              "Origin: " + origin + "<br>" +
-              "Destination: " + destination + "<br>" +
-              "Vehicle multiplier: x" + Number(admin.vMult).toFixed(2) + "<br>" +
-              "Shipping multiplier: x" + Number(admin.sMult).toFixed(2) + "<br>" +
+              "Pickup (formatted): " + admin.oFmt + "<br>" +
+              "Dropoff (formatted): " + admin.dFmt + "<br>" +
+              "Vehicle mult: x" + admin.vMult.toFixed(2) + "<br>" +
+              "Shipping mult: x" + admin.sMult.toFixed(2) + "<br>" +
               (serviceType === "transport" ? ("Broker fee: " + money(admin.brokerFee) + "<br>") : "") +
               (serviceType === "transport" ? ("Lane surcharge: " + money(admin.lane) + "<br>") : "") +
               "Rounded from: " + money(admin.roundedFrom) + " → " + money(total);
@@ -466,8 +434,8 @@
               "Shipping: " + shipText + "\n" +
               (vin ? ("VIN: " + vin + "\n") : "") +
               (vinDecoded ? ("VIN decoded: " + vinDecoded + "\n") : "") +
-              "Pickup: " + origin + "\n" +
-              "Drop-off: " + destination + "\n" +
+              "Pickup: " + originAddr + "\n" +
+              "Drop-off: " + destAddr + "\n" +
               "Distance: " + distanceLine + "\n" +
               "Non-runner: " + nonRunnerText + "\n" +
               "Port/Export: " + portText + "\n" +
@@ -485,8 +453,8 @@
               "Shipping: " + shipText + "\n" +
               (vin ? ("VIN: " + vin + "\n") : "") +
               (vinDecoded ? ("VIN decoded: " + vinDecoded + "\n") : "") +
-              "Pickup: " + origin + "\n" +
-              "Drop-off: " + destination + "\n" +
+              "Pickup: " + originAddr + "\n" +
+              "Drop-off: " + destAddr + "\n" +
               "Distance: " + distanceLine + "\n" +
               "Non-runner: " + nonRunnerText + "\n" +
               "Port/Export: " + portText + "\n" +
@@ -494,13 +462,9 @@
               "Thanks"
             );
 
-        } catch (err) {
+        } catch (err){
           resultDiv.style.color = "red";
-          // show full error (helps you diagnose)
           resultDiv.textContent = "Unable to calculate distance. " + err.message;
-          if (IS_ADMIN) {
-            vinInfoEl.textContent = "Debug tip: check the error JSON above for INVALID_ARGUMENT details.";
-          }
         }
       });
     });
