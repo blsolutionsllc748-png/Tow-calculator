@@ -7,81 +7,52 @@
 
   <style>
     :root{
-      /* Brand colors (tweak to match your website) */
-      --brand-bg: #0b0f14;          /* near-black */
-      --brand-card: #ffffff;        /* white */
-      --brand-text: #111827;        /* dark text */
-      --brand-muted: #6b7280;       /* gray */
-      --brand-accent: #c1121f;      /* red accent */
-      --brand-accent-2: #111827;    /* black */
-      --brand-success: #16a34a;     /* green */
-      --brand-blue: #2563eb;        /* blue */
-      --border: #e5e7eb;
+      --brand-bg:#0b0f14;
+      --brand-card:#ffffff;
+      --brand-text:#111827;
+      --brand-muted:#6b7280;
+      --brand-accent:#c1121f;
+      --brand-accent-2:#111827;
+      --brand-success:#16a34a;
+      --brand-blue:#2563eb;
+      --border:#e5e7eb;
     }
-
-    body { font-family: Arial, sans-serif; background: #f3f4f6; margin:0; padding:0; }
-    .container { max-width: 820px; margin: 40px auto; background: var(--brand-card); border-radius: 14px; padding: 24px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); border:1px solid var(--border); }
-
-    .header {
-      display:flex; align-items:center; gap:12px; justify-content:center; flex-wrap:wrap;
-      margin-bottom: 6px;
-    }
-    .logo { height: 42px; width:auto; display:block; }
-    h1 { text-align:center; margin:0; font-size: 24px; color: var(--brand-text); }
-    .subtitle { text-align:center; font-size: 14px; color: var(--brand-muted); margin: 8px 0 18px; }
-
-    label { font-weight:bold; font-size:14px; display:block; margin-top:12px; margin-bottom:6px; color: var(--brand-text); }
-    input[type="text"], select {
-      width:100%; padding:10px 10px; border-radius:10px; border:1px solid var(--border);
-      font-size:14px; box-sizing:border-box; background:#fff;
-    }
-
-    .row { display:flex; gap:12px; flex-wrap:wrap; }
-    .col { flex:1; min-width:240px; }
-
-    .checkbox-row { display:flex; align-items:center; margin-top:12px; font-size:14px; color: var(--brand-text); }
-    .checkbox-row input { margin-right:8px; transform:scale(1.05); }
-
-    button {
-      width:100%; margin-top:18px; padding:12px 0;
-      background: var(--brand-accent-2); color:#fff;
-      font-size:16px; font-weight:bold; border:none; border-radius:12px; cursor:pointer;
-    }
-    button:hover { opacity:0.92; }
-
-    #result { margin-top:16px; font-size:15px; min-height:44px; color: var(--brand-text); }
-    .meta { margin-top:10px; font-size:13px; color: var(--brand-muted); min-height:18px; }
-
-    .badge {
-      display:inline-block; padding:4px 10px; border-radius:999px;
-      font-size:12px; background: #fee2e2; color: #7f1d1d; border: 1px solid #fecaca;
-      margin-left:6px;
-    }
-
-    .disclaimer { margin-top:16px; font-size:12px; color: var(--brand-muted); line-height:1.45; }
-
-    .cta { display:none; margin-top:14px; gap:10px; display:flex; flex-wrap:wrap; }
-    .cta a {
-      flex:1; min-width:160px; text-align:center; padding:11px 12px; color:#fff;
-      text-decoration:none; border-radius:12px; font-weight:bold;
-    }
-    .cta .call { background: var(--brand-success); }
-    .cta .sms { background: var(--brand-accent-2); }
-    .cta .email { background: var(--brand-blue); }
-
-    .muted { opacity:0.55; }
-    .hint { font-size:12px; color: var(--brand-muted); margin-top:6px; }
-    .hr { height:1px; background: var(--border); margin: 18px 0 6px; }
+    body{font-family:Arial,sans-serif;background:#f3f4f6;margin:0;padding:0;}
+    .container{max-width:820px;margin:40px auto;background:var(--brand-card);border-radius:14px;padding:24px;box-shadow:0 10px 25px rgba(0,0,0,.08);border:1px solid var(--border);}
+    .header{display:flex;align-items:center;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:6px;}
+    .logo{height:42px;width:auto;display:block;}
+    h1{text-align:center;margin:0;font-size:24px;color:var(--brand-text);}
+    .subtitle{text-align:center;font-size:14px;color:var(--brand-muted);margin:8px 0 18px;}
+    label{font-weight:bold;font-size:14px;display:block;margin-top:12px;margin-bottom:6px;color:var(--brand-text);}
+    input[type="text"],select{width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);font-size:14px;box-sizing:border-box;background:#fff;}
+    .row{display:flex;gap:12px;flex-wrap:wrap;}
+    .col{flex:1;min-width:240px;}
+    .checkbox-row{display:flex;align-items:center;margin-top:12px;font-size:14px;color:var(--brand-text);}
+    .checkbox-row input{margin-right:8px;transform:scale(1.05);}
+    button{width:100%;margin-top:18px;padding:12px 0;background:var(--brand-accent-2);color:#fff;font-size:16px;font-weight:bold;border:none;border-radius:12px;cursor:pointer;}
+    button:hover{opacity:.92;}
+    #result{margin-top:16px;font-size:15px;min-height:44px;color:var(--brand-text);}
+    .meta{margin-top:10px;font-size:13px;color:var(--brand-muted);min-height:18px;white-space:pre-wrap;word-break:break-word;}
+    .badge{display:inline-block;padding:4px 10px;border-radius:999px;font-size:12px;background:#fee2e2;color:#7f1d1d;border:1px solid #fecaca;margin-left:6px;}
+    .disclaimer{margin-top:16px;font-size:12px;color:var(--brand-muted);line-height:1.45;}
+    .cta{display:none;margin-top:14px;gap:10px;display:flex;flex-wrap:wrap;}
+    .cta a{flex:1;min-width:160px;text-align:center;padding:11px 12px;color:#fff;text-decoration:none;border-radius:12px;font-weight:bold;}
+    .cta .call{background:var(--brand-success);}
+    .cta .sms{background:var(--brand-accent-2);}
+    .cta .email{background:var(--brand-blue);}
+    .muted{opacity:.55;}
+    .hint{font-size:12px;color:var(--brand-muted);margin-top:6px;}
+    .hr{height:1px;background:var(--border);margin:18px 0 6px;}
   </style>
 </head>
 
 <body>
   <div class="container">
     <div class="header">
-      <!-- Put logo.png in the same GitHub repo as index.html -->
       <img class="logo" src="logo.png" alt="B-L Auto Export" onerror="this.style.display='none';" />
       <h1>Transport Cost Calculator <span class="badge">Broker estimate</span></h1>
     </div>
+
     <div class="subtitle">
       Local towing + nationwide auction/port transport. Final pricing confirmed before dispatch.
     </div>
@@ -176,41 +147,40 @@
     // =====================
 
     // Local Tow pricing
-    const LOCAL_FLAT_UP_TO_10MI = 125;     // flat rate for <= 10 miles
-    const LOCAL_PER_MILE_AFTER_10 = 4.50;  // per mile after 10
+    const LOCAL_FLAT_UP_TO_10MI = 125;
+    const LOCAL_PER_MILE_AFTER_10 = 4.50;
     const LOCAL_NONRUNNER = 50;
 
-    // Transport pricing (auction/port/nationwide)
+    // Transport pricing
     const TRANS_MINIMUM = 200;
     const TRANS_PER_MILE = 1.50;
     const TRANS_NONRUNNER = 125;
 
-    // Broker/dispatch fee (transport only; added AFTER multipliers)
+    // Broker fee (transport only; AFTER multipliers)
     const TRANS_BROKER_FEE = 70;
 
     // Add-ons
     const PORT_EXPORT_FEE = 75;
 
-    // Vehicle multipliers (applies to BOTH local + transport)
+    // Vehicle multipliers
     const VEHICLE_MULTIPLIERS = {
       sedan: 1.00,
       suv: 1.15,
       pickup: 1.25,
       van: 1.20
-      // oversize handled separately
     };
 
-    // Shipping type multipliers
+    // Shipping multipliers
     const SHIPPING_MULTIPLIERS = {
       open: 1.00,
       enclosed: 1.60
     };
 
     // =====================
-    // PRICE PRESENTATION
+    // PRICE ROUNDING
     // =====================
     const ROUNDING_MODE = "nearest"; // "nearest" | "up"
-    const ROUND_TO = 25;            // $25 increments (try 50 if you want)
+    const ROUND_TO = 25;
 
     function roundPrice(amount) {
       if (!isFinite(amount)) return amount;
@@ -219,7 +189,7 @@
     }
 
     // =====================
-    // LANE / MARKET SURCHARGES
+    // LANE SURCHARGES
     // =====================
     const LANE_SURCHARGES = [
       { name: "Northeast congestion", match: /\b(NY|NJ|PA|MA|CT|MD|RI|NH|VT|ME)\b/i, fee: 50 },
@@ -228,27 +198,33 @@
 
     function calculateLaneSurcharge(origin, destination) {
       let surcharge = 0;
-      const o = origin || "";
-      const d = destination || "";
       for (const lane of LANE_SURCHARGES) {
-        if (lane.match.test(o) || lane.match.test(d)) surcharge += lane.fee;
+        if (lane.match.test(origin) || lane.match.test(destination)) surcharge += lane.fee;
       }
       return surcharge;
     }
 
     // =====================
-    // ADMIN / DEBUG MODE
+    // ADMIN MODE (hidden)
     // =====================
-    // Enable by visiting: ?admin=1 (customers won't see it unless they know this)
     const IS_ADMIN = new URLSearchParams(window.location.search).get("admin") === "1";
 
     // =====================
-    // ROUTES API DISTANCE
+    // ROUTES API
     // =====================
-    // IMPORTANT: Put your restricted Routes API key here (DO NOT leave a public unrestricted key in GitHub)
-    const GOOGLE_API_KEY = "YOUR_GOOGLE_ROUTES_API_KEY";
+    const GOOGLE_API_KEY = "YOUR_GOOGLE_ROUTES_API_KEY"; // <-- paste your restricted key here
 
-    async function getDrivingDistanceMeters(origin, destination) {
+    function cleanAddress(addr) {
+      return (addr || "")
+        .replace(/contact info.*$/i, "")
+        .replace(/\s+/g, " ")
+        .trim();
+    }
+
+    async function getDrivingDistanceMeters(originRaw, destinationRaw) {
+      const origin = cleanAddress(originRaw);
+      const destination = cleanAddress(destinationRaw);
+
       const res = await fetch("https://routes.googleapis.com/directions/v2:computeRoutes", {
         method: "POST",
         headers: {
@@ -259,12 +235,18 @@
         body: JSON.stringify({
           origin: { address: origin },
           destination: { address: destination },
-          travelMode: "DRIVE"
+          travelMode: "DRIVE",
+          routingPreference: "TRAFFIC_AWARE",
+          languageCode: "en-US",
+          units: "IMPERIAL",
+          regionCode: "US"
         })
       });
 
-      if (!res.ok) throw new Error("Routes API failed (" + res.status + ").");
-      const data = await res.json();
+      const text = await res.text();
+      if (!res.ok) throw new Error(`Routes API failed (${res.status}): ${text}`);
+
+      const data = JSON.parse(text);
       const meters = data?.routes?.[0]?.distanceMeters;
       if (!meters) throw new Error("No route distance returned.");
       return meters;
@@ -273,7 +255,7 @@
     function money(n) { return "$" + Number(n).toFixed(2); }
 
     // =====================
-    // VIN VALIDATION + DECODE
+    // VIN decode
     // =====================
     function normalizeVin(vin) { return (vin || "").trim().toUpperCase(); }
     function isValidVinFormat(vin) { return /^[A-HJ-NPR-Z0-9]{17}$/.test(vin); }
@@ -350,17 +332,20 @@
       syncPortRow();
 
       btn.addEventListener("click", async function () {
-        const origin = pickupInput.value.trim();
-        const destination = dropoffInput.value.trim();
-
-        const serviceType = serviceTypeEl.value;     // local | transport
-        const shippingType = shippingTypeEl.value;   // open | enclosed
+        const serviceType = serviceTypeEl.value;
+        const shippingType = shippingTypeEl.value;
 
         const isNonRunner = nonRunnerEl.checked;
-        const isPortExport = portExportEl.checked && (serviceType === "transport");
+        const isPortExport = portExportEl.checked && serviceType === "transport";
 
         cta.style.display = "none";
         vinInfoEl.textContent = "";
+
+        const pickupRaw = pickupInput.value;
+        const dropoffRaw = dropoffInput.value;
+
+        const origin = cleanAddress(pickupRaw);
+        const destination = cleanAddress(dropoffRaw);
 
         if (!origin || !destination) {
           resultDiv.style.color = "red";
@@ -375,10 +360,9 @@
           return;
         }
 
-        // VIN decode (optional) + auto-suggest vehicle type
+        // VIN decode optional
         const vin = normalizeVin(vinEl.value);
         let vinDecoded = "";
-        let vinMeta = null;
 
         if (vin) {
           if (!isValidVinFormat(vin)) {
@@ -388,8 +372,8 @@
           }
           vinInfoEl.textContent = "Decoding VIN...";
           try {
-            vinMeta = await decodeVinNHTSA(vin);
-            vinDecoded = vinMeta.display;
+            const vinMeta = await decodeVinNHTSA(vin);
+            vinDecoded = vinMeta.display || "";
             vinInfoEl.textContent = vinDecoded ? ("VIN decoded: " + vinDecoded) : "VIN decoded (details unavailable).";
             vehicleTypeEl.value = suggestVehicleTypeFromVin(vinMeta);
           } catch (e) {
@@ -408,14 +392,7 @@
           const sMult = SHIPPING_MULTIPLIERS[shippingType] || 1.0;
 
           let total = 0;
-
-          // For admin-only debug
-          let adminDebug = {
-            vMult, sMult,
-            brokerFee: 0,
-            laneSurcharge: 0,
-            roundedFrom: 0
-          };
+          let admin = { vMult, sMult, brokerFee: 0, lane: 0, roundedFrom: 0 };
 
           if (serviceType === "local") {
             const baseLocal = (miles <= 10)
@@ -423,7 +400,7 @@
               : (LOCAL_FLAT_UP_TO_10MI + ((miles - 10) * LOCAL_PER_MILE_AFTER_10));
 
             total = baseLocal + (isNonRunner ? LOCAL_NONRUNNER : 0);
-            total = total * vMult; // local: vehicle multiplier only
+            total = total * vMult;
           } else {
             const mileageCost = miles * TRANS_PER_MILE;
 
@@ -432,22 +409,17 @@
               (isNonRunner ? TRANS_NONRUNNER : 0) +
               (isPortExport ? PORT_EXPORT_FEE : 0);
 
-            // multipliers first
             total = baseTransport * vMult * sMult;
 
-            // broker fee after multipliers (so your sample can hit $300 w/ rounding)
             total += TRANS_BROKER_FEE;
-            adminDebug.brokerFee = TRANS_BROKER_FEE;
+            admin.brokerFee = TRANS_BROKER_FEE;
 
-            // lane surcharge (transport only)
-            const laneSurcharge = calculateLaneSurcharge(origin, destination);
-            total += laneSurcharge;
-            adminDebug.laneSurcharge = laneSurcharge;
+            const lane = calculateLaneSurcharge(origin, destination);
+            total += lane;
+            admin.lane = lane;
           }
 
-          adminDebug.roundedFrom = total;
-
-          // round final price for customer
+          admin.roundedFrom = total;
           total = roundPrice(total);
 
           const distanceLine = miles.toFixed(1) + " miles";
@@ -458,7 +430,7 @@
           const shipText = shippingLabel(shippingType);
           const estimateText = money(total);
 
-          // CUSTOMER-FACING OUTPUT (no rate math)
+          // Customer-facing (NO rate breakdown)
           resultDiv.style.color = "#111827";
           resultDiv.innerHTML =
             "<strong>Estimated cost: " + estimateText + "</strong><br>" +
@@ -469,16 +441,18 @@
             (vin ? ("VIN: " + vin + "<br>") : "") +
             (vinDecoded ? ("VIN decoded: " + vinDecoded + "<br>") : "");
 
-          // ADMIN-ONLY DEBUG (hidden unless ?admin=1)
+          // Admin-only debug (visit ?admin=1)
           if (IS_ADMIN) {
             resultDiv.innerHTML +=
               "<hr style='margin:10px 0'>" +
-              "<strong>Internal breakdown (admin only)</strong><br>" +
-              "Vehicle multiplier: x" + Number(adminDebug.vMult).toFixed(2) + "<br>" +
-              "Shipping multiplier: x" + Number(adminDebug.sMult).toFixed(2) + "<br>" +
-              (serviceType === "transport" ? ("Broker fee: " + money(adminDebug.brokerFee) + "<br>") : "") +
-              (serviceType === "transport" ? ("Lane surcharge: " + money(adminDebug.laneSurcharge) + "<br>") : "") +
-              "Rounded from: " + money(adminDebug.roundedFrom) + " → " + money(total);
+              "<strong>Admin debug</strong><br>" +
+              "Origin: " + origin + "<br>" +
+              "Destination: " + destination + "<br>" +
+              "Vehicle multiplier: x" + Number(admin.vMult).toFixed(2) + "<br>" +
+              "Shipping multiplier: x" + Number(admin.sMult).toFixed(2) + "<br>" +
+              (serviceType === "transport" ? ("Broker fee: " + money(admin.brokerFee) + "<br>") : "") +
+              (serviceType === "transport" ? ("Lane surcharge: " + money(admin.lane) + "<br>") : "") +
+              "Rounded from: " + money(admin.roundedFrom) + " → " + money(total);
           }
 
           cta.style.display = "flex";
@@ -522,8 +496,11 @@
 
         } catch (err) {
           resultDiv.style.color = "red";
-          resultDiv.textContent =
-            "Unable to calculate distance. Please verify addresses and try again. (" + err.message + ")";
+          // show full error (helps you diagnose)
+          resultDiv.textContent = "Unable to calculate distance. " + err.message;
+          if (IS_ADMIN) {
+            vinInfoEl.textContent = "Debug tip: check the error JSON above for INVALID_ARGUMENT details.";
+          }
         }
       });
     });
