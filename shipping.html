@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Shipping Booking Request</title>
+  <style>
+    :root{
+      --brand-card:#ffffff;
+      --brand-text:#111827;
+      --brand-muted:#6b7280;
+      --brand-accent-2:#0b1220;
+      --brand-success:#16a34a;
+      --brand-blue:#2563eb;
+      --border:#e5e7eb;
+    }
+    body{font-family:Arial,sans-serif;background:#f3f4f6;margin:0;padding:0;}
+    .container{max-width:860px;margin:40px auto;background:var(--brand-card);border-radius:14px;padding:24px;box-shadow:0 10px 25px rgba(0,0,0,.08);border:1px solid var(--border);}
+    h1{margin:0;color:var(--brand-text);text-align:center;}
+    .subtitle{text-align:center;color:var(--brand-muted);margin:10px 0 18px;font-size:14px;}
+    label{font-weight:bold;font-size:14px;display:block;margin-top:12px;margin-bottom:6px;color:var(--brand-text);}
+    input,select,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid var(--border);font-size:14px;box-sizing:border-box;background:#fff;}
+    textarea{min-height:90px;resize:vertical;}
+    .row{display:flex;gap:12px;flex-wrap:wrap;}
+    .col{flex:1;min-width:260px;}
+    .actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}
+    .btn{
+      flex:1;min-width:220px;text-align:center;padding:12px 12px;border-radius:12px;
+      color:#fff;font-weight:bold;text-decoration:none;display:inline-block;border:none;cursor:pointer;
+    }
+    .btn.primary{background:var(--brand-accent-2);}
+    .btn.call{background:var(--brand-success);}
+    .btn.email{background:var(--brand-blue);}
+    .note{margin-top:14px;color:var(--brand-muted);font-size:12px;line-height:1.45;}
+    .toplinks{display:flex;justify-content:center;gap:12px;flex-wrap:wrap;margin-top:8px;}
+    .toplinks a{color:var(--brand-blue);text-decoration:none;font-size:13px;}
+    .sectionTitle{margin-top:18px;font-weight:bold;color:var(--brand-text);}
+    .hidden{display:none;}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Shipping Booking Request</h1>
+    <div class="subtitle">Request **RoRo** or **Container** shipping — we’ll confirm schedule, documents, and final price.</div>
+
+    <div class="toplinks">
+      <a href="./index.html">← Back to Transport Calculator</a>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <label for="shipType">Shipping type</label>
+        <select id="shipType">
+          <option value="RoRo" selected>RoRo (Vehicle roll-on/roll-off)</option>
+          <option value="Container">Container Shipping</option>
+        </select>
+      </div>
+      <div class="col">
+        <label for="destination">Destination country</label>
+        <select id="destination">
+          <option value="Ghana" selected>Ghana</option>
+          <option value="Nigeria">Nigeria</option>
+          <option value="Benin">Benin</option>
+          <option value="Togo">Togo</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <label for="fullName">Full name</label>
+        <input id="fullName" type="text" placeholder="Your name" />
+      </div>
+      <div class="col">
+        <label for="phone">Phone / WhatsApp</label>
+        <input id="phone" type="text" placeholder="+1 (___) ___-____" />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <label for="email">Email (optional)</label>
+        <input id="email" type="text" placeholder="you@email.com" />
+      </div>
+      <div class="col">
+        <label for="timeline">Preferred timeline</label>
+        <select id="timeline">
+          <option value="ASAP" selected>ASAP</option>
+          <option value="1-2 weeks">1–2 weeks</option>
+          <option value="2-4 weeks">2–4 weeks</option>
+          <option value="Flexible">Flexible</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <label for="portFrom">Port of loading (US)</label>
+        <select id="portFrom">
+          <option value="Baltimore, MD" selected>Baltimore, MD</option>
+          <option value="Newark, NJ">Newark, NJ</option>
+          <option value="Jacksonville, FL">Jacksonville, FL</option>
+          <option value="Other">Other</option>
+        </select>
+      </div>
+      <div class="col">
+        <label for="portTo">Port of discharge (destination)</label>
+        <input id="portTo" type="text" placeholder="e.g., Tema, Takoradi, Lagos, Cotonou" />
+      </div>
+    </div>
+
+    <div class="sectionTitle">Vehicle / Cargo details</div>
+
+    <div class="row">
+      <div class="col">
+        <label for="vehicle">Vehicle (Year/Make/Model)</label>
+        <input id="vehicle" type="text" placeholder="2018 Toyota Highlander" />
+      </div>
+      <div class="col">
+        <label for="vin">VIN (optional)</label>
+        <input id="vin" type="text" maxlength="17" placeholder="17-character VIN" />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col">
+        <label for="condition">Vehicle condition</label>
+        <select id="condition">
+          <option value="Runs and drives" selected>Runs and drives</option>
+          <option value="Non-runner">Non-runner</option>
+          <option value="Salvage / damaged">Salvage / damaged</option>
+        </select>
+      </div>
+      <div class="col">
+        <label for="pickup">Pickup location (auction/yard/city)</label>
+        <input id="pickup" type="text" placeholder="Copart/IAAI location or city/state" />
+      </div>
+    </div>
+
+    <div id="containerFields" class="hidden">
+      <div class="sectionTitle">Container details</div>
+
+      <div class="row">
+        <div class="col">
+          <label for="containerSize">Container size</label>
+          <select id="containerSize">
+            <option value="20ft" selected>20ft</option>
+            <option value="40ft">40ft</option>
+          </select>
+        </div>
+        <div class="col">
+          <label for="cargoType">Cargo type</label>
+          <select id="cargoType">
+            <option value="Vehicle only" selected>Vehicle only</option>
+            <option value="Vehicle + goods">Vehicle + goods</option>
+            <option value="Goods only">Goods only</option>
+          </select>
+        </div>
+      </div>
+
+      <label for="goodsDesc">Goods description (optional)</label>
+      <textarea id="goodsDesc" placeholder="List goods (boxes, household items, parts, etc.) and estimated quantity."></textarea>
+    </div>
+
+    <label for="notes">Notes (title status, keys, documents, timing)</label>
+    <textarea id="notes" placeholder="Example: Clean title, keys available, ship to Tema, need pickup this week."></textarea>
+
+    <div class="actions">
+      <button id="submitToForm" class="btn primary" type="button">Submit Booking Request</button>
+      <a class="btn call" href="tel:5083692955">Call Now</a>
+      <a id="emailBtn" class="btn email" href="#">Send via Email</a>
+    </div>
+
+    <div class="note">
+      This request does not guarantee booking until we confirm space, schedule, and documentation requirements.
+    </div>
+  </div>
+
+  <script>
+    // ✅ Put your Google Form prefilled URL mapping here (I’ll explain below)
+    // If you don’t have it yet, this page still works via Email button.
+    const GOOGLE_FORM_BASE_PREFILL_URL = ""; // e.g. https://docs.google.com/forms/d/e/XXXX/viewform?usp=pp_url&entry.111=...
+
+    const PHONE = "5083692955";
+    const EMAIL = "info@blautoexport.com";
+
+    function v(id){ return (document.getElementById(id).value || "").trim(); }
+    function enc(s){ return encodeURIComponent(s || ""); }
+
+    function buildEmailBody(){
+      const shipType = v("shipType");
+      return (
+        "Shipping Booking Request\n" +
+        "Shipping type: " + shipType + "\n" +
+        "Name: " + v("fullName") + "\n" +
+        "Phone/WhatsApp: " + v("phone") + "\n" +
+        (v("email") ? ("Email: " + v("email") + "\n") : "") +
+        "Destination: " + v("destination") + "\n" +
+        "Port (US): " + v("portFrom") + "\n" +
+        "Port (Destination): " + v("portTo") + "\n" +
+        "Vehicle: " + v("vehicle") + "\n" +
+        (v("vin") ? ("VIN: " + v("vin") + "\n") : "") +
+        "Condition: " + v("condition") + "\n" +
+        "Pickup: " + v("pickup") + "\n" +
+        "Timeline: " + v("timeline") + "\n" +
+        (shipType === "Container"
+          ? ("Container size: " + v("containerSize") + "\n" +
+             "Cargo type: " + v("cargoType") + "\n" +
+             "Goods: " + v("goodsDesc") + "\n")
+          : "") +
+        "Notes: " + v("notes")
+      );
+    }
+
+    function openMail(){
+      const body = buildEmailBody();
+      window.location.href =
+        "mailto:" + EMAIL +
+        "?subject=" + enc("Shipping Booking Request") +
+        "&body=" + enc(body);
+    }
+
+    function openGoogleForm(){
+      if (!GOOGLE_FORM_BASE_PREFILL_URL) {
+        // fallback to email if form URL not set yet
+        openMail();
+        return;
+      }
+
+      // If you want me to map fields automatically, I’ll need your Google Form "entry.xxxxx" IDs.
+      // For now, simplest: open the form and user completes it.
+      window.open(GOOGLE_FORM_BASE_PREFILL_URL, "_blank");
+    }
+
+    // Show/hide container fields
+    const shipTypeEl = document.getElementById("shipType");
+    const containerFields = document.getElementById("containerFields");
+    function sync(){
+      const isContainer = shipTypeEl.value === "Container";
+      containerFields.classList.toggle("hidden", !isContainer);
+    }
+    shipTypeEl.addEventListener("change", sync);
+    sync();
+
+    document.getElementById("emailBtn").addEventListener("click", function(e){
+      e.preventDefault();
+      openMail();
+    });
+
+    document.getElementById("submitToForm").addEventListener("click", function(){
+      // Option A: opens Google Form (free) if you paste the prefill URL.
+      // If not provided, it falls back to email so it still works.
+      openGoogleForm();
+    });
+  </script>
+</body>
+</html>
